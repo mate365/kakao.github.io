@@ -55,9 +55,9 @@ image: '/assets/images/cm.png'
 asset_url: /assets
 # google_analytics:
 #   ua: 'UA-72007721-1'
-# facebook:
-#   app_id: '1204347326263800'
-#   username: mate365
+facebook:
+  # app_id:
+  username: https://www.facebook.com/cloudmatekr/
 # twitter:
 #   username: mate365
 # google_plus:
