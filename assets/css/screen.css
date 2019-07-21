@@ -18,7 +18,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: 'Kakao', sans-serif;
+    font-family: sans-serif;
     font-weight: 400;
     color: #1e1e1e;
 }
@@ -199,8 +199,8 @@ for small screen(<720px):
     height: 60px;
     margin: 0 0;
     padding: 0;
-    background: url(../images/pc/tech_logo.png) no-repeat center;
-    background-size: 123px 21px;
+    background: url(../images/pc/CLOUDMATE_LOGO.png) no-repeat center;
+    background-size: 126px 37px;
 }
 
 #menu {
@@ -518,15 +518,6 @@ for small screen(<720px):
     display: none;
 }
 
-#kakao-link-btn {
-    background: url(../images/pc/share_talk.png) no-repeat;
-    background-size: 20px 20px;
-}
-
-#share-kakaostory {
-    background: url(../images/pc/share_story.png) no-repeat;
-    background-size: 20px 20px;
-}
 
 #share-facebook {
     background: url(../images/pc/share_face.png) no-repeat;
@@ -547,8 +538,9 @@ for small screen(<720px):
 #cover,
 #navbar,
 #footer {
-    font-family: 'Kakao', sans-serif !important;
+    font-family: sans-serif !important;
 }
+
 
 /* list(loop) */
 
@@ -1100,7 +1092,7 @@ body.author-template #cover p {
     max-width: 606px;
     width: 100%; /* @@iolo */
     margin-left: 254px; /* 254px = 80(padding-left) + 144(#cover-author-image width) + 30(spacing) */
-    text-align: left;
+    text-align: center;
 }
 
 #cover-author-image {
@@ -1124,17 +1116,6 @@ body.tag-template {
 
 body.page-template {
 
-}
-
-#forkme {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 149px;
-    height: 149px;
-    z-index: 998;
-    background: url(../images/forkme_kakao_tr.png) no-repeat;
-    margin-right: -45px;
 }
 
 #post-content.page {
@@ -1199,8 +1180,8 @@ body.page-template {
         top: 0;
         height: 50px;
         margin: 0 auto;
-        background-image: url(../images/mo/tech_logo.png);
-        background-size: 99px 17px;
+        background-image: url(../images/mo/CLOUDMATE_LOGO_m.png);
+        background-size: 102px 34px;
     }
 
     #menu {
@@ -1333,16 +1314,6 @@ body.page-template {
     #shares > li > * {
         width: 22px;
         height: 22px;
-    }
-
-    #kakao-link-btn {
-        background-image: url(../images/mo/share_talk.png);
-        background-size: 22px 22px;
-    }
-
-    #share-kakaostory {
-        background-image: url(../images/mo/share_story.png);
-        background-size: 22px 22px;
     }
 
     #share-facebook {
@@ -1584,7 +1555,7 @@ body.page-template {
     }
 
     #logo {
-        background-image: url(../images/mo/tech_logo@2x.png);
+        background-image: url(../images/mo/CLOUDMATE_LOGO_m@2x.png);
     }
 
     #menu-toggle {
@@ -1631,15 +1602,6 @@ body.page-template {
         background-image: url(../images/mo/icon_larrow@2x.png);
     }
 
-    #kakao-link-btn {
-        background-image: url(../images/mo/share_talk@2x.png);
-        background-size: 22px 22px;
-    }
-
-    #share-kakaostory {
-        background-image: url(../images/mo/share_story@2x.png);
-        background-size: 22px 22px;
-    }
 
     #share-facebook {
         background-image: url(../images/mo/share_face@2x.png);
@@ -1674,7 +1636,7 @@ body.page-template {
     }
 
     #logo {
-        background-image: url(../images/mo/tech_logo@3x.png);
+        background-image: url(../images/mo/CLOUDMATE_LOGO_m@3x.png);
     }
 
     #menu-toggle {
@@ -1721,15 +1683,8 @@ body.page-template {
         background-image: url(../images/mo/icon_larrow@3x.png);
     }
 
-    #kakao-link-btn {
-        background-image: url(../images/mo/share_talk@3x.png);
-        background-size: 22px 22px;
-    }
 
-    #share-kakaostory {
-        background-image: url(../images/mo/share_story@3x.png);
-        background-size: 22px 22px;
-    }
+
 
     #share-facebook {
         background-image: url(../images/mo/share_face@3x.png);

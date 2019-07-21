@@ -1,13 +1,13 @@
-title: kakao 기술 블로그
-email: opensource@kakaocorp.com
+title: CloudMate Tech
+email: connectus@cloudmt.co.kr
 description: |
-  Connect Everything 새로운 연결, 새로운 세상.
-  연결의 혁신으로 세상은 더욱 가깝고 새로워진다고 카카오는 믿습니다.
+  클라우드메이트는 고객의 비즈니스 환경을 우선으로 생각하고,
+   “사용자로서의 직접 경험”을 공유합니다.
 baseurl: ''
-url: 'http://tech.kakao.com'
+url: 'https://www.cloudmt.co.kr/'
 timezone: Asia/Seoul 
 
-repository: kakao/kakao.github.io
+repository: mate365/mat365.github.io
 
 permalink: /:year/:month/:day/:title/
 
@@ -50,19 +50,18 @@ exclude: [README.md, Gemfile, Gemfile.lock]
 keep_files: [assets, files]
 github: [metadata]
 # iolo's custom
-author: opensource@kakaocorp.com
-image: '/assets/images/default_blog_cover.jpg'
+author: connectus@cloudmt.co.kr
+image: '/assets/images/cm.png'
 asset_url: /assets
-#asset_url: //meta-kage.kakaocdn.net/dn/osa/blog/assets
-#asset_url: //t1.daumcdn.net/osa/blog/assets
-google_analytics:
-  ua: 'UA-72007721-1'
-facebook:
-  app_id: '1204347326263800'
-  username: nkakao
-twitter:
-  username: kakaodev
-google_plus:
-  username: kakaodev
+# google_analytics:
+#   ua: 'UA-72007721-1'
+# facebook:
+#   app_id: '1204347326263800'
+#   username: mate365
+# twitter:
+#   username: mate365
+# google_plus:
+#   username: mate365
 github_url:
-  username: kakao
+  username: mate365
+

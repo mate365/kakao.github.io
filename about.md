@@ -2,12 +2,12 @@
 layout: page
 title: About
 permalink: /about/
-image: /files/covers/blog.jpg
+image: /files/covers/about-img.jpg
 sitemap: yes
 tags: [about]
 ---
 
-[kakao](http://www.kakaocorp.com) 기술블로그 입니다.
+[CLOUDMATE](http://cloudmt.co.kr) 기술블로그 입니다.
 
-Powered by [GitHub Pages](https://pages.github.com) and [Jekyll](https://jekyllrb.com).
+Powered by  [***KaKao Tech Blog***](http://tech.kakao.com) \|\| [***GitHub Pages***](https://pages.github.com) \|\| [***Jekyll***](https://jekyllrb.com).
 
