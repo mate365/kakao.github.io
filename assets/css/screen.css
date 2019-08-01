@@ -413,7 +413,7 @@ for small screen(<720px):
     position: relative;
     vertical-align: middle;
     text-align: center;
-    background-color: rgba(12, 12, 48, 0.3);
+    background-color: rgba(0, 0, 0, 0.55);
     overflow: hidden;
     z-index: 2;
 }
