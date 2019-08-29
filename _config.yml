@@ -53,8 +53,8 @@ github: [metadata]
 author: contact@cloudmt.co.kr
 image: '/assets/images/img4.jpg'
 asset_url: /assets
-# google_analytics:
-#   ua: 'UA-72007721-1'
+google_analytics:
+  ua: 'UA-146594086-2'
 facebook:
   # app_id:
   username: cloudmatekr
