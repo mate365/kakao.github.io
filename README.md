@@ -82,6 +82,12 @@ $ bundle exec jekyll serve --drafts
 3. 처음 글을 쓰는 필자이라면 **글쓴이 등록**(필수)
 4. 유력한(?) 태그가 새로 등장했다면 **태그 등록**(선택)
 
+### 사진첨부
+
+1. `files` 디렉토리에 이미지 업로드
+2. `![이미지이름](/files/image.png)` 를 통해 보여줄수있음
+
+
 ### 필자 등록
 
 1. `_authors` 디렉토리에 `lastname.firstname.md` 이름으로 필자 정보 파일 추가
