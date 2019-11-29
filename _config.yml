@@ -52,6 +52,7 @@ github: [metadata]
 # iolo's custom
 author: contact@cloudmt.co.kr
 image: '/assets/images/img4.jpg'
+og_image: '/assets/images/logo-tech.png'
 asset_url: /assets
 google_analytics:
   ua: 'UA-146594086-2'
