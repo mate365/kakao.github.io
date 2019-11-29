@@ -18,7 +18,10 @@
 {% endif %}
 {% unless meta_image contains '://' %}
 {% assign meta_image = meta_image | prepend: site.url %}
+{% endunless %}
 {% assign meta_og_image = site.og_image %}
+{% unless meta_og_image contains '://' %}
+{% assign meta_og_image = meta_og_image | prepend: site.url %}
 {% endunless %}
 <title>{{ meta_title }}</title>
 <meta name="title" content="{{ meta_title }}" />
