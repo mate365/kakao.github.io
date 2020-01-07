@@ -36,9 +36,9 @@ CLOUDMATE TECH BLOG에 오신걸 환영합니다.
 >  - image: http://... # `커버이미지` url(선택)
 >  - date: `YYYY-MM-DD HH:MM:SS` # 발행일(필수)
 > 3. 처음 글을 쓰는 필자라면 **글쓴이(author) 등록**(필수)
-> 4. 유력한(?) 태그가 새로 등장했다면 **태그 등록**(검색을 위한 도구)  
+> 4. 유력한(?) 태그가 새로 등장했다면 **태그 등록**(검색을 위한 도구)
+    
 ###예시
-
 ```
 ---
 layout: post
@@ -48,6 +48,11 @@ date: 2019-07-21 19:00
 tags: [jekyll]
 ---
 ```  
+
+## 3. Git push
+```
+
+```
 
 ### 그래도 모르시겠다면, [참조](https://raw.githubusercontent.com/mate365/mate365.github.io/master/_posts/2019-11-28-Insight2019_1.md)
 ### 그래도 모르시겠다면 저를 불러주세요.
