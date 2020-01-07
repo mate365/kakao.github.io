@@ -49,11 +49,10 @@ tags: [jekyll]
 ---
 ```  
 
-## 3. Git push
-```
 
-```
-
+=======
+# Git 사용법
+>>>>>>> d5f000da9dafb66a5cd62f08906ce64213950c2d
 ### 그래도 모르시겠다면, [참조](https://raw.githubusercontent.com/mate365/mate365.github.io/master/_posts/2019-11-28-Insight2019_1.md)
 ### 그래도 모르시겠다면 저를 불러주세요.
 ![Call Me](https://kr.seaicons.com/wp-content/uploads/2015/09/Giraffe-icon.png)
