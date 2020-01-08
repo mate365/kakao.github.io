@@ -59,8 +59,9 @@ git 저장소 - [Git repository](https://github.com/mate365/mate365.github.io)
     - `git push`
     - 끝
 
-2. Github에서 `_post` 디렉토리에서 `Create new file` 을 통한 업로드 방식
+2. Github에서 `_post` 디렉토리에서 `Create new file` 을 통한 업로드 방식  
 ![Create new file](https://user-images.githubusercontent.com/16531527/71944036-ec5d8a80-3205-11ea-99fe-bd12b7dede9a.png)  
+---
 ![image](https://user-images.githubusercontent.com/16531527/71944146-37779d80-3206-11ea-9035-b353ff14356f.png)
 업로드하면 완료.
 
