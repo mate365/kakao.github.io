@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Microsoft Compliance Score and Microsoft 365 Compliance Center"
+title: "Microsoft 365 규정 준수 센터의 규정 준수 점수"
 author: sangyeop park
 date: 2020-01-09 10:00
 tags: [Microsoft 365]
