@@ -14,15 +14,16 @@ tags: [Microsoft, Microsoft Azure, Cloud, Azure, Visual Studio, VScode, VSonline
 - 로그인 후 첫 화면  
 ![로그인 후 첫화면](/files/blog/first_main.PNG)  
 
-## Main 페이지 설명
-### 1. (상단) Create new plan
-- 새로운 Plan 생성  
+## Main 페이지
+- Plan, Environment 두가지 생성만으로 사용 할 수있다. 
+### 1. Create new plan
+- 지정한 Azure Subscription에 리소스 생성한다.
+- 해당 Plan에 대해 과금이 이루어진다.
 ![Create new plan](/files/blog/NewPlan.PNG)  
-- 생성할 Azure Subscription 지정하고, 해당 Plan에 대한 리소스 생성.
 ### 2. Environments
-- Plan 위에서 Project를 진행할 remote server 생성.  
+- 위에서 지정한 Plan에서 진행할 Project에 대한 remote server 생성.  
 ![Create new Environment](/files/blog/NewEnv.PNG)  
-```buildoutcfg
+```
 Environment Name : 프로젝트 환경 이름
 Git Repository : 비워두거나, git 주소 입력
 Instance Type : Standard (Linux): 4 cores, 8 GB RAM,
