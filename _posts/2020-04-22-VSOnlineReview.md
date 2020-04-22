@@ -7,8 +7,8 @@ tags: [Microsoft, Microsoft Azure, Cloud, Azure, Visual Studio, VScode, VSonline
 ---
 
 # Visual Studio Online 사용법
-- 특징 : 대부분의 프로그래밍 언어를 지원, 이미 설치되어있는 가상 환경을 제공하고,  
-개인의 최소한의 셋팅으로 어디서든 협업할 수있는 툴을 제공하고 있다.
+- 특징 : 대부분의 프로그래밍 언어를 지원하는 가상 환경을 제공하고,  
+최소한의 IDE 셋팅으로 어디서든 작업 혹은 협업할 수있는 툴을 제공하고 있다.
 ## 로그인
 - https://online.visualstudio.com/login
 - 로그인 후 첫 화면  
