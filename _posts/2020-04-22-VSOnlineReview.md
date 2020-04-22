@@ -18,7 +18,7 @@ tags: [Microsoft, Microsoft Azure, Cloud, Azure, Visual Studio, VScode, VSonline
 - Plan, Environment 두가지 생성만으로 사용 할 수있다. 
 ### 1. Create new plan
 - 지정한 Azure Subscription에 리소스 생성한다.
-- 해당 Plan에 대해 과금이 이루어진다.
+- 해당 Plan에 대해 과금이 이루어진다.  
 ![Create new plan](/files/blog/NewPlan.PNG)  
 ### 2. Environments
 - 위에서 지정한 Plan에서 진행할 Project에 대한 remote server 생성.  
@@ -65,6 +65,7 @@ Live Share : 코드 협업 기능
 좌측 메뉴 remote explorer > 좌측하단 Forwarded Ports 추가 > 실행시킬 웹서버 포트 입력
 > 만들어진 메뉴를 통해 host로 접속할수 있음.
 ```  
+
 ![Forward port](/files/blog/forwardport.PNG)  
 
 ### Nodejs
@@ -96,5 +97,5 @@ npm start
 - Local환경이아닌 VM환경에서 모든 작업이 돌아감.
 - 따라서 Local 환경을 따로 구성하지않아도 되는 편함이 있음.
 - vscode의 extension을 통해 web이 아닌 app에서 그대로 사용가능하다.
-[참고링크1](https://evols-atirev.tistory.com/28)
-[참고링크2](https://code.visualstudio.com/docs/remote/vsonline)
+[(참고링크1)](https://evols-atirev.tistory.com/28)
+[(참고링크2)](https://code.visualstudio.com/docs/remote/vsonline)
