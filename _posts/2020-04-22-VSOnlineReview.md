@@ -12,16 +12,16 @@ tags: [Microsoft, Microsoft Azure, Cloud, Azure, Visual Studio, VScode, VSonline
 ## 로그인
 - https://online.visualstudio.com/login
 - 로그인 후 첫 화면
-![로그인 후 첫화면](files/blog/first_main.PNG)
+![로그인 후 첫화면](/files/blog/first_main.PNG)
 
 ## Main 페이지 설명
 ### 1. (상단) Create new plan
 - 새로운 Plan 생성
-![Create new plan](files/blog/NewPlan.PNG)
+![Create new plan](/files/blog/NewPlan.PNG)
 - 생성할 Azure Subscription 지정하고, 해당 Plan에 대한 리소스 생성.
 ### 2. Environments
 - Plan 위에서 Project를 진행할 remote server 생성.
-![Create new Environment](files/blog/NewEnv.PNG)
+![Create new Environment](/files/blog/NewEnv.PNG)
 ```buildoutcfg
 Environment Name : 프로젝트 환경 이름
 Git Repository : 비워두거나, git 주소 입력
@@ -32,10 +32,10 @@ Instance Type : Standard (Linux): 4 cores, 8 GB RAM,
 
 ## Web visual studio 생성
 - Environment 생성 후 화면
-![env생성 후 화면(실패)](files/blog/webenv.PNG)
+![env생성 후 화면(실패)](/files/blog/webenv.PNG)
 - 첫 생성시 connection 오류가 뜰수있음. (Reload)
 - 성공시
-![env생성 후 화면(실패)](files/blog/webenv_suc.PNG)
+![env생성 후 화면(실패)](/files/blog/webenv_suc.PNG)
 - Visual Code와 인터페이스가 똑같아 보임.
 - 왼쪽 메뉴
 ```
@@ -51,12 +51,12 @@ Live Share : 코드 협업 기능
 
 ## python 실행해보자.
 - hello.py 파일 생성
-![간단한 python 코드 실행](files/blog/Runpython.PNG)
+![간단한 python 코드 실행](/files/blog/Runpython.PNG)
 - Extension에서 Python Extension 설치를 통해 사용가능.
-![python설치](files/blog/extensionInstallpython.PNG)
+![python설치](/files/blog/extensionInstallpython.PNG)
 - 설치 후 Reload 필요.
 - 실행(F5)
-![python실행](files/blog/RunpythonRes.PNG)
+![python실행](/files/blog/RunpythonRes.PNG)
 
 ## frontweb을 띄워보자.
 - host에 어떻게 접근할까?
@@ -64,7 +64,7 @@ Live Share : 코드 협업 기능
 좌측 메뉴 remote explorer > 좌측하단 Forwarded Ports 추가 > 실행시킬 웹서버 포트 입력
 > 만들어진 메뉴를 통해 host로 접속할수 있음.
 ```
-![Forward port](files/blog/forwardport.PNG)
+![Forward port](/files/blog/forwardport.PNG)
 - 
 ### Nodejs
 - [예제 소스](https://github.com/mate365/AzureDevOpsProblemSolving/tree/master/src)
@@ -76,16 +76,16 @@ npm install
 npm start
 ```
 - 실행화면
-![run화면](files/blog/node_run.PNG)
+![run화면](/files/blog/node_run.PNG)
 - Forwarded Ports 추가를 통해 웹서버 접속 확인.
 ### python Django
 - [sample project](https://github.com/mate365/python_web_example)
 - 버전 선택
-![python version select](files/blog/python_venv_choose.PNG)
+![python version select](/files/blog/python_venv_choose.PNG)
 - `Python: Select Interpreter` 을 통해 버전을 선택한다.
 - `pip install -r requirements.txt`을 통해 패키지 설치한다.
 - Run(F5)를 통해 django 서버 실행.
-![django 실행화면](files/blog/djangoRun.PNG)
+![django 실행화면](/files/blog/djangoRun.PNG)
 
 - Python Extension 설치후 Run(F5) 하게되면 위와 같은 화면이 뜬다. Django를 골라 run 할수있다.
 - IDE 자체 Run 기능은 django runserver 를 지원하고있다.
