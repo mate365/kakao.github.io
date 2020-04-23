@@ -11,16 +11,16 @@ tags: [Microsoft, Microsoft Azure, Cloud, Azure, Visual Studio, VScode, VSonline
 최소한의 IDE 셋팅으로 어디서든 작업 혹은 협업할 수있는 툴을 제공하고 있다.  
   
 # Visual Studio Online 생성
-- https://online.visualstudio.com/login
+- [https://online.visualstudio.com/login](https://online.visualstudio.com/login)
 - 로그인 후 첫 화면  
 ![로그인 후 첫화면](/files/blog/first_main.PNG)  
 
 - Plan, Environment 두가지 생성만으로 사용 할 수있다.  
-1. Create new plan  
+Create new plan  
 - 지정한 Azure Subscription에 리소스 생성한다.
 - 해당 Plan에 대해 과금이 이루어진다.  
 ![Create new plan](/files/blog/NewPlan.PNG)  
-2. Environments  
+Environments  
 - 위에서 지정한 Plan에서 진행할 Project에 대한 remote server 생성.  
 ![Create new Environment](/files/blog/NewEnv.PNG)  
 ```
@@ -33,13 +33,13 @@ Instance Type : Standard (Linux): 4 cores, 8 GB RAM,
   
 
 # visual studio Online IDE
-- Environment 생성 후 화면  
+- Environment 생성 후 화면
+- 특징 : Visual Code와 인터페이스가 비슷함.  
 ![env생성 후 화면(실패)](/files/blog/webenv.PNG)  
 - 첫 생성시 connection 오류가 뜰수있음. (Reload)
-- 성공시  
-![env생성 후 화면(실패)](/files/blog/webenv_suc.PNG)  
-- Visual Code와 인터페이스가 똑같아 보임.
-- 왼쪽 메뉴
+- 성공시 아래 사진과 같이 오류 메세지가 사라짐.
+![env생성 후 화면(성공)](/files/blog/webenv_suc.PNG)  
+- 왼쪽 메뉴의 기능 설명
 ```
 Explorer : 프로젝트 탐색기
 Search : 찾기기능
@@ -52,19 +52,20 @@ Live Share : 코드 협업 기능
 ```
 
 # Hello Python 작성
-- hello.py 파일 생성  
+- hello.py 파일 생성 시 자동으로 추천 메세지가 뜸.
 ![간단한 python 코드 실행](/files/blog/Runpython.PNG)  
-- Extension에서 Python Extension 설치를 통해 사용가능.  
+- Extension에서 Python Extension 설치를 통해 사용.  
 ![python설치](/files/blog/extensionInstallpython.PNG)  
 - 설치 후 Reload 필요.  
 - 실행(F5)  
 ![python실행](/files/blog/RunpythonRes.PNG)  
 
 # frontweb 작성
-- host에 어떻게 접근할까?  
+- 로컬에서 작업할때, frontweb의 경우 직접 localhost에 접속하면서 디버그를 한다.
+- 그렇다면 vsOnline에서는 host에 어떻게 접근할까?  
 ```
-좌측 메뉴 remote explorer > 좌측하단 Forwarded Ports 추가 > 실행시킬 웹서버 포트 입력
-> 만들어진 메뉴를 통해 host로 접속할수 있음.
+좌측 메뉴 remote explorer > 좌측하단 Forwarded Ports 추가 
+> 실행시킬 웹서버 포트 입력 > 만들어진 메뉴를 통해 host로 접속할수 있음.
 ```
 
 ![Forward port](/files/blog/forwardport.PNG)  
