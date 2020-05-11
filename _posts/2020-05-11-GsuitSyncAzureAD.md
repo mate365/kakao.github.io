@@ -92,7 +92,7 @@ SSO 방식을 SAML 방식으로 변경하면 다음과 같은 화면이 진행�
 ![image](https://user-images.githubusercontent.com/58406083/81524279-876c9980-938b-11ea-846b-1986b9b935cc.png)  
 
 관리자 자격 증명을 입력 할 경우 Google 관리 센터에 접근하는 계정을 입력합니다.
-해당 계정은 Google에서 최고 관리자 권한을 가지고 있는 계정으로 접근합니다.
+해당 계정은 Google에서 최고 관리자 권한을 가지고 있는 계정으로 접근합니다.  
 ![image](https://user-images.githubusercontent.com/58406083/81524293-92bfc500-938b-11ea-8316-91c0d53756ae.png)  
 
 현 단계에서 연결 테스트를 거치지 않고 프로비전이 실패할 경우를 대비하여, 알림 전자 메일 및 오류 발생 시 전자 메일 보내기를 선택합니다.
