@@ -69,6 +69,7 @@ SSO 방식을 SAML 방식으로 변경하면 다음과 같은 화면이 진행�
 
 이제 두 번째로 사용자 특성 및 클레임을 입력합니다.
 ![image](https://user-images.githubusercontent.com/58406083/81524152-162ce680-938b-11ea-8f1c-d024dfad9c91.png)
+
 (위 설정은 앱을 추가하면 기본으로 설정되는 사용자 특성 및 클레임입니다.)
 ![image](https://user-images.githubusercontent.com/58406083/81524170-23e26c00-938b-11ea-97ed-4f588d507a03.png)
 사용자를 매핑하는 기준은 사용자의 UPN을 기준으로 이루어지기 때문에, 다른 클레임은 필요하지 않습니다.
