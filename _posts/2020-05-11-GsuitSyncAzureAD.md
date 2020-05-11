@@ -75,7 +75,7 @@ SSO 방식을 SAML 방식으로 변경하면 다음과 같은 화면이 진행�
 추가 클레임을 전부 삭제 한 후에 고유 클레임을 남겨둡니다.
 (고유 클레임은 삭제할 수 없습니다.)
 
-3번 단계인 SAML 서명 인증서는 차후에, G Suite에서 설정이 필요하기 때문에, 우선은 파일을 받아둡니다. (Base64로 인증서를 다운로드 합니다.)
+3번 단계인 SAML 서명 인증서는 차후에, G Suite에서 설정이 필요하기 때문에, 우선은 파일을 받아둡니다. (Base64로 인증서를 다운로드 합니다.)  
 ![image](https://user-images.githubusercontent.com/58406083/81524206-43799480-938b-11ea-8bda-7fce98e3480c.png)  
 (인증서는 정해진 기간이 있기 때문에, 알림 전자 메일을 통해 해당 인증서가 만료되기 전에 교체하는 작업이 필요합니다. 인증서가 만료되면 SSO는 동작하지 않습니다.)
 
@@ -89,19 +89,19 @@ SSO 방식을 SAML 방식으로 변경하면 다음과 같은 화면이 진행�
 
 위 작업까지 완료되었을 경우, 다시 Azure Portal로 돌아옵니다.
 돌아온 후에, 프로비전 중 메뉴로 처음 들어가게 되면, 아래와 같이 프로비전 모드를 자동으로 바꿔줍니다.
-![image](https://user-images.githubusercontent.com/58406083/81524279-876c9980-938b-11ea-846b-1986b9b935cc.png)
+![image](https://user-images.githubusercontent.com/58406083/81524279-876c9980-938b-11ea-846b-1986b9b935cc.png)  
 
 관리자 자격 증명을 입력 할 경우 Google 관리 센터에 접근하는 계정을 입력합니다.
 해당 계정은 Google에서 최고 관리자 권한을 가지고 있는 계정으로 접근합니다.
-![image](https://user-images.githubusercontent.com/58406083/81524293-92bfc500-938b-11ea-8316-91c0d53756ae.png)
+![image](https://user-images.githubusercontent.com/58406083/81524293-92bfc500-938b-11ea-8316-91c0d53756ae.png)  
 
 현 단계에서 연결 테스트를 거치지 않고 프로비전이 실패할 경우를 대비하여, 알림 전자 메일 및 오류 발생 시 전자 메일 보내기를 선택합니다.
 ![image](https://user-images.githubusercontent.com/58406083/81524477-50e34e80-938c-11ea-8bca-f10f881dba68.png)
 
 매핑 부분에서는 어떠한 값이 매핑 되는지를 확인할 수 있습니다. (사용자 및 그룹)
-![image](https://user-images.githubusercontent.com/58406083/81524508-6b1d2c80-938c-11ea-871c-1bb3d190c420.png)
+![image](https://user-images.githubusercontent.com/58406083/81524508-6b1d2c80-938c-11ea-871c-1bb3d190c420.png)  
 (하기 화면은 사용자 특성 매핑 화면입니다.)
-![image](https://user-images.githubusercontent.com/58406083/81524551-8f790900-938c-11ea-9d4a-93ff21e9d78d.png)
+![image](https://user-images.githubusercontent.com/58406083/81524551-8f790900-938c-11ea-9d4a-93ff21e9d78d.png)  
 
 이제 하단의 프로비전 상태를 설정으로 표시하고 저장을 다시 저장을 클릭합니다.
 (프로비저닝은 40분을 기준으로 자동으로 진행되며 프로비저닝 주기를 임의로 변경할 수는 없지만, 바로 실행은 가능합니다.)
