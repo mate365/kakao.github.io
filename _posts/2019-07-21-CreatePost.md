@@ -29,9 +29,9 @@ Tip. github의 issue 기능에 붙여넣기했을때의 링크를 사용할 수 
 ### 업로드 전 양식 입력
  글작성 마친 후 다음같은 작업을 합니다.
 > 1. `yyyy-mm-dd-{simple_post_name}.md` 형식으로 파일이름을 변경.  
-
-`2019-07-21-CreatePost.md`
-
+```
+2019-07-21-CreatePost.md
+```
 > 2. 글 최상단에 아래와 같이 [front matter] 작성
 ```
 ---
@@ -59,7 +59,7 @@ git 저장소 - [repository](https://github.com/mate365/mate365.github.io)
   2. `git commit` 후 vim을 통해 커밋메시지 입력 OR `git commit -m "커밋메세지"
   3. `git push`
 
-- Visual Studio Code에서 GIT 업로드
+- Visual Studio Code에서 Git 업로드
 
 ![VScode에서업로드방법](/files/blog/postvscode.png)
   1. 왼쪽 메뉴의 git control 이동
@@ -71,12 +71,12 @@ git 저장소 - [repository](https://github.com/mate365/mate365.github.io)
 **약 30초 후 포스팅 확인!**
 
 
-## 3. 필자 등록
+## 3. 필자 등록 (최초 등록시 필요)
 1. `_authors` 디렉토리에 name.md 이름으로 필자 정보 파일 추가
 2. 업로드 되어있는 파일 참고하면서 작성
 3. 이미지 파일 업로드 (/files/authors/name.png)
 
-## 4. 태그 등록
+## 4. 태그 등록 (최초 등록시 필요)
 1. `_tags` 디렉토리에 {tag이름}.md 로 파일 작성.
 2. 업로드 되어있는 파일 참고하면서 작성
 3. 파일이름과, 내부 name항목과 같아야함.
