@@ -1,4 +1,4 @@
 ---
-name: Office 365
-title: 'Office 365'
+name: teams
+title: 'teams'
 ---

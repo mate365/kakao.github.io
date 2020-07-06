@@ -1,4 +1,4 @@
 ---
-name: Cloud
-title: 'Cloud'
+name: logic App
+title: 'logic App'
 ---
