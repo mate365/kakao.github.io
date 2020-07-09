@@ -10,6 +10,11 @@ CLOUDMATE TECH BLOG에 오신걸 환영합니다.
 
 포스팅 방법 입니다.
 
+우선 Markdown 문법에 맞게 **작성된 글**이 있어야합니다.  
+그 다음 [repository](https://github.com/mate365/mate365.github.io)에 초대 후, 업로드 합니다.
+
+아래 자세한 방법입니다.
+
 ## 1. 글 작성.
 
 아래를 참고하여 문법에 맞게 글을 작성합니다.
@@ -48,20 +53,21 @@ tags: [Post, 작성법]
 
 
 ## 2. 글 업로드
-git 저장소 - [repository](https://github.com/mate365/mate365.github.io)
+git 저장소 - [repository](https://github.com/mate365/mate365.github.io) (사내 메신저를 통해 Github 계정 전달해주세요.)
   1. 작업할 로컬 디렉토리에서 `git clone https://github.com/mate365/mate365.github.io.git`
   2. `git pull`을 통해 로컬 Repo의 최신화
   3.  작성한 글을 `_post` 디렉토리에 업로드 (+ 사진 업로드)
 
-이후 아래의 두가지 방법중 **한가지 방법**으로 업로드
-- 로컬 작업 (Git 명령어를 통한 업로드 방식)
+이후 아래의 두가지 방법중 **한가지 방법**으로 Git을 통해 업로드
+- **로컬 작업** (Git bash 명령어를 통한 업로드 방식)
   1. `git add $글위치 $사진위치`
-  2. `git commit` 후 vim을 통해 커밋메시지 입력 OR `git commit -m "커밋메세지"
-  3. `git push`
+  2. `git status`를 통해 업로드 할 파일이 stage에 올라와있는지 확인
+  3. `git commit` 후 vim을 통해 커밋메시지 입력 OR `git commit -m "커밋메세지"
+  4. `git push`
 
-- Visual Studio Code에서 Git 업로드
+- **Visual Studio Code**에서 Git 업로드  
 
-![VScode에서업로드방법](/files/blog/postvscode.png)
+![VScode에서업로드방법](/files/blog/postvscode.png)  
   1. 왼쪽 메뉴의 git control 이동
   2. 업로드할 파일 staging
   3. Commit 메세지 입력
