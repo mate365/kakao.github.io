@@ -82,9 +82,9 @@ Task만으로 개발내용을 동시에 추적가능하고 상태를 자동으�
 Azure Devops는 다양한 환경의 어플리케이션에 대해 빌드, 배포를 할 수있도록 지원하고 있다. Pipeline에서 어플리케이션을 빌드하고 배포하는 환경을 구성할 수 있다.
 앞서 설명한 로그인 api가 포함된 간단한 웹어플리케이션에 대해 Docker를 빌드하고 저장소로 Image를 푸시하는 빌드 파이프라인을 구성했다.
 
-> ACR(Azure Container Registry)란?
-Azure의 관리형 개인 Docker 컨테이너 이미지 스토리지 
-[> 자세히](https://docs.microsoft.com/ko-kr/azure/container-registry/container-registry-intro)
+> ACR(Azure Container Registry)란?  
+> Azure의 관리형 개인 Docker 컨테이너 이미지 스토리지   
+> [> 자세히](https://docs.microsoft.com/ko-kr/azure/container-registry/container-registry-intro)  
 
 ### ACR 생성
 Azure Portal의 Azure Cloud Shell을 사용하여 Azure Cotainer Registry(ACR)를 생성하고 Pipeline에 등록한다.
@@ -105,16 +105,16 @@ az acr create \
 위 스크린샷처럼 Pipelines메뉴의 Library에서 Variable group안에 값을 생성할 수있다.
 여기서 등록된 값들은 파이프라인에서 쉽게 사용할 수있으며, 유출되면 위험한 민감한 정보의 경우 Azure KeyVault와 연동해서 가져올 수있다.
 
-> Azure KeyVault란?
-여러가지 종류의 Secret/Key 데이터를 저장하고 사용할 수있게 도와주는 Azure 서비스 중 하나이다.
-[> 자세히](https://docs.microsoft.com/ko-kr/azure/key-vault/general/overview)
+> Azure KeyVault란?  
+> 여러가지 종류의 Secret/Key 데이터를 저장하고 사용할 수있게 도와주는 Azure 서비스 중 하나이다.  
+> [> 자세히](https://docs.microsoft.com/ko-kr/azure/key-vault/general/overview)  
 
 **앞서 ACR생성에 설정한 변수들은 파이프라인에서 사용하기위해 환경변수로 등록**
 
-> - `Variable group`을 생성하고 변수 등록 가능.
-![](/files/blog/2020-07-10/2020-07-02-17-21-04.png)
+> - `Variable group`을 생성하고 변수 등록 가능.  
+![](/files/blog/2020-07-10/2020-07-02-17-21-04.png)  
 
-> - Azure KeyVault에서 `secret`을 생성 후, 프로젝트와 연동함으로써 사용가능.
+> - Azure KeyVault에서 `secret`을 생성 후, 프로젝트와 연동함으로써 사용가능.  
 ![](/files/blog/2020-07-10/2020-07-02-15-35-57.png)  
 
 연동된 secret 값은 Azure Devops에서는 보이지않고
@@ -132,19 +132,19 @@ Kubernetes는 컨테이너 기반의 어플리케이션으로 작동한다. 따�
 ![](/files/blog/2020-07-10/2020-07-06-14-35-23.png)  
 
 두가지 방법 중 하나를 선택하고, Docker build and push가 있는 기본 템플릿을 찾아 설정하면 된다.
-> Container registry : 위에서 만든 ACR
-> Container repository : 이미지 repository 이름
-> Command : buildAndPush
-> Dockerfile : Git repo에서 Dockerfile 경로 ex) Application/Dockerfile
-> Build context : 빌드 경로 ex) Application
-> Tags : $(build.buildId)
-         latest
+> Container registry : 위에서 만든 ACR  
+> Container repository : 이미지 repository 이름  
+> Command : buildAndPush  
+> Dockerfile : Git repo에서 Dockerfile 경로 ex) Application/Dockerfile  
+> Build context : 빌드 경로 ex) Application  
+> Tags : $(build.buildId)  
+>         latest  
 
 빌드 성공시 docker image가 성공적으로 ACR로 푸시 된것을 확인할 수있다.
 ### Trigger
 추가적으로 trigger를 통해 git branch의 변동사항에 대해 빌드 작동이 가능하다.
 - Editor인 경우 trigger 항목에서 설정.
-- yaml로 작성한 경우 아래와 같이 trigger 설정.
+- yaml로 작성한 경우 아래와 같이 trigger 설정.  
 ```
 trigger:
 - 'master'
