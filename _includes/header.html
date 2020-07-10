@@ -14,8 +14,8 @@
     <ul class="search__results" id="results-container"></ul>
 
     <ul id="menu" class="nav">
-        <!-- <li class="{% if page.url == '/about/' %} active {% endif %}"><a href="{{ base_path }}/about/">About</a></li> -->
         <li class="active"><a href="{{ base_path }}/">블로그</a></li>
+        <li class="{% if page.url == '/howtopost/' %} active {% endif %}"><a href="{{ base_path }}/howtopost/">작성법</a></li>
     </ul>
 </div>
 <!-- Script pointing to jekyll-search.js -->
