@@ -86,10 +86,13 @@ tags: [Post, 내부]
   > ![VScode에서업로드방법](/files/blog/postvscode.png) 
 
 - Git bash를 이용한 업로드
-  > 1. `git add $글위치 $사진위치`
-  > 2. `git status`를 통해 업로드 할 파일이 stage에 올라와있는지 확인
-  > 3. `git commit` 후 vim을 통해 커밋메시지 입력 OR `git commit -m "커밋메세지"
-  > 4. `git push`
+  > 1. `git add $글위치 $사진위치`  
+  ![](/files/blog/howtopost/2020-07-10-17-34-17.png)
+  > 2. `git status`를 통해 업로드 할 파일이 stage에 올라와있는지 확인  
+  ![](/files/blog/howtopost/2020-07-10-17-34-43.png)
+  > 3. `git commit` 후 vim을 통해 커밋메시지 입력 OR `git commit -m "커밋메세지"  
+  > 4. `git push`  
+  ![](/files/blog/howtopost/2020-07-10-17-34-59.png)
 
 # 5. 확인
 30초 이내 [Tech blog](https://tech.cloudmt.co.kr/)에 포스트가 올라갑니다.
