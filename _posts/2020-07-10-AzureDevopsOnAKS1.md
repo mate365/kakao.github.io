@@ -145,6 +145,7 @@ Kubernetes는 컨테이너 기반의 어플리케이션으로 작동한다. 따�
 추가적으로 trigger를 통해 git branch의 변동사항에 대해 빌드 작동이 가능하다.
 - Editor인 경우 trigger 항목에서 설정.
 - yaml로 작성한 경우 아래와 같이 trigger 설정.  
+
 ```
 trigger:
 - 'master'
