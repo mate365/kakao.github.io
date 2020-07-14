@@ -14,7 +14,7 @@ Netapp의 Cloud volume ontap 서비스를 구축 밎 사용해봄으로서 느�
 Netapp Ontap 제품군을 통해 그 데이터가 어디에 어떤형식으로 보관되어 있든 엑세스 및 관리를 일원화 할 수 있습니다.
 
 예를들어 IDC나 서버에 있는 파일 시스템 기반 데이터와 오브젝트나 블록기반에 스토리지에 분산되어 저장되어 있더라도 
-Ontap 제품군을 통해 migration 및 동기화 백업등이 가능하며 데이터관리자가 각기 필요로 하는 곳에 데이터 제공을 위해 작업하는 일이 없어집니다.
+Ontap 제품군을 통해 migration 및 동기화 백업등이 가능하며 데이터관리자가 각기 필요로 하는 곳에 데이터 제공하는 작업이 매우 간결해집니다.
 
 ![Cloudmanager Console](/files\blog\CVO\Cloudmanager.png)
 
@@ -38,7 +38,7 @@ https://cloud.netapp.com/ontap-cloud
 
 ![FabricView](/files\blog\CVO\netappFabricView.png)
 
-다음편에서 Netapp CVO 아키텍쳐와 AWS-Azure 네트워크 구성에 대해 알아보겠습니다.
+이어지는 다음 포스팅에서 Netapp CVO 아키텍쳐와 AWS-Azure 네트워크 구성에 대해 알아보겠습니다.
 
 
 
