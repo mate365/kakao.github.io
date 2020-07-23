@@ -266,13 +266,13 @@ Yaml이나 Json형식으로 Kubernetes가 유지할 객체의 원하는 상태�
 ## Release 파이프라인
 배포한 AKS, Artifact를 통해 어플리케이션을 Kubernetes환경에 올릴 차례이다. Release 파이프라인에 아래와 같이 설정을 배포하기만 하면된다.
 ### apply secret 
-어플리케이션의 패스워드 같은 Keyvault에서 관리되는 값을 Kubernetes Secret으로 배포하고 사용하자.  
+어플리케이션 배포시 `Keyvault`에서 관리되는 `환경변수`들을 Kubernetes `Secret`으로 배포할 수 있다.  
 ![](/files/blog/2020-07-22/2020-07-20-09-32-37.png)
 ### apply imagepullsecret
-ACR에서 Pull 하기위한 인증을위해 Imagepullsecret을 설정하자.  
+ACR에서 Pull 하기위한 인증을 위해 `Imagepullsecret`을 설정하자.  
 ![](/files/blog/2020-07-22/2020-07-20-09-41-25.png)
 ### apply configmap
-configmap은 데이터를 저장하는데 사용하는 API오브젝트이다. 파일을 통한 저장이 가능하다.  
+`configmap`은 데이터를 저장하는데 사용하는 API오브젝트이다. 파일을 통한 저장이 가능하다.  
 ![](/files/blog/2020-07-22/2020-07-20-09-45-23.png)
 ### apply deployment  
 Artifact에 저장한 yaml을 경로로 deployment를 설정하고, Deploy를 해준다. `ImagePullSecret`은 위에서 설정한 값 그대로 써준다.  
@@ -281,13 +281,13 @@ Artifact에 저장한 yaml을 경로로 deployment를 설정하고, Deploy를 �
 위처럼 Service도 설정해준다.
 ![](/files/blog/2020-07-22/2020-07-20-09-57-15.png)
 ### 성공
-배포가 성공되면 아래와 같이 Azure shell을 통해 목록을 볼 수있다. 실패시 파이프라인의 로그를 보고 슈팅을 하도록하자.
+배포가 성공되면 아래와 같이 `Azure shell`에서 명령어를 통해 목록을 볼 수있다. 실패시 파이프라인의 로그를 보고 슈팅을 하도록하자.
 ![](/files/blog/2020-07-22/2020-07-10-13-55-58.png)
 
 
 ## 모니터링
 ### Helm Chart
-Helm이란, 쿠버네티스를 패키지로 해서 관리해주는 것으로 Python의 pip, Node.js의 npm의 역할로 보면된다. Helm Chart란 패키지 포멧으로 쿠버네티스를 설명하는 파일의 집합이라고 볼 수 있다.
+`Helm`이란, 쿠버네티스를 패키지로 해서 관리해주는 것으로 Python의 pip, Node.js의 npm의 역할로 보면된다. `Helm Chart`란 패키지 포멧으로 쿠버네티스를 설명하는 파일의 집합이라고 볼 수 있다.
 
 모니터링 도구로써 Prometheus와 대시보드 Grafana를 함께 많이 사용하고 있다. Helm Chart의 실습을 통해 모니터링 구성을 해보았다. Azure Shell을 통해 우선 배포 테스트를 해보았으며, 추후 배포 파이프라인에 추가해볼 예정이다.
 
@@ -315,7 +315,7 @@ helm install grafana stable/grafana --set persistence.enabled=true --set service
 ![](/files/blog/2020-07-22/2020-07-21-15-01-00.png)  
 - 위 스크린샷처럼 접속 후 왼쪽에 있는 `+` 메뉴에서 `Import`로 들어간다.  
 ![](/files/blog/2020-07-22/2020-07-21-15-02-29.png)  
-- 위 칸에 `6417`를 적으면 아래 스크린샷처럼 나온다.  
+- 위 칸에 `6417`를 적으면 아래 스크린샷처럼 나온다. [Grafana Labs 참조](https://grafana.com/grafana/dashboards/6417)  
 ![](/files/blog/2020-07-22/2020-07-21-15-03-21.png)  
 - Import를 하고 생성한 대시보드를 띄우면 아래와 같이 나온다.  
 ![](/files/blog/2020-07-22/2020-07-21-15-04-42.png)  
