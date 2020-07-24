@@ -35,7 +35,7 @@ AWS DX와 같이 전용선 서비스를 사용하여 AWS 와 Azure 사이에 대
 		- 10.1.0.0/24 default
 		- 10.1.1.0/24 gatewaysubnet
 
-- AWS
+- AWS<br>
 	|Name|IPv4| CIDR|라우팅 테이블|
 	|---|---|---|---|
 	|wyahn-vpc-private-2c |172.17.10.0/24 |rtb-0e174629b72f9971b | wyahn-private-route|
@@ -156,12 +156,12 @@ General information
 IPsec VPN 연결에서 해당 키값이 있어야 터널연결이 가능합니다.
 
 ## Azure connection 생성 설정
-- Azure 콘솔에서 연결을 검색하여 연결을 생성합니다.
+- Azure 콘솔에서 연결을 검색하여 연결을 생성합니다.<br>
 ![AZ-Con1](/files\blog\CVO\AZ-Con1.png)
 - 로컬게이트웨이가 등록이 안되있을 것이기 때문에 게이트웨이 생성 버튼을 선택합니다. 
 - AWS VPN TXT 파일에 있던 Phase 1 의 Remote Gateway IP 값을 적어줍니다.
 - IP 주소는 AWS 네트워크 대역을 적어줍니다.
-![AZ-Con2](/files\blog\CVO\AZ-Con2.png)
+![AZ-Con2](/files\blog\CVO\AZ-Con2.png)<br>
 - 공유키에 너굴맨이 처리한 그것을 넣어줍니다.(상단 사진 참조)
 - 생성 버튼을 누르고 바로 Phase2도 연결합니다.(방법은 1과동일 값은 2로!)
 
@@ -171,26 +171,26 @@ AWS IPsec 터널이 무적이 아닙니다. <br>
 스토리지 서비스에서 네트워크의 안정성 확보를 위해서라도 이중화 꼭! 합시다.
 
 - 라우팅 테이블 생성하여 AZure 서브넷에 적용해줍니다.
-- 경로전파는 사용으로 해야합니다.( 안하면 수동으로 입력해야 되니까요 )
+- 경로전파는 사용으로 해야합니다.( 안하면 수동으로 입력해야 되니까요 )<br>
 ![AZ-Con4](/files\blog\CVO\AZ-Con4.png)
 
-- 여기까지 완료하셨다면 아래와 같이 두개의 커넥션이 생성됩니다.
+- 여기까지 완료하셨다면 아래와 같이 두개의 커넥션이 생성됩니다.<br>
 ![AZ-Con5](/files\blog\CVO\AZ-Con5.png)
 
 ## AWS 라우팅 설정
-- 잠시 두 장비가 맺어지는 시간이 필요하기때문에 커피한잔 내라고 와서 아래와 같이 보면 성공입니다.
+- 잠시 두 장비가 맺어지는 시간이 필요하기때문에 커피한잔 내라고 와서 아래와 같이 보면 성공입니다.<br>
 ![AZ-Con6](/files\blog\CVO\AZ-Con6.png)
 
 - TGW 라우팅테이블 메뉴 <br>
 (Azure 쪽 네트워크 대역을 알려주는 라우팅설정을 진행합니다.)<br>
 ![TGW1](/files\blog\CVO\TGW1.png)
-- CIDR에 Azure 쪽 네트워크 대역을 적어줍니다.
+- CIDR에 Azure 쪽 네트워크 대역을 적어줍니다.<br>
 ![TGW2](/files\blog\CVO\TGW2.png)
 
 - 아래와 같이 TGW가 VPN과 VPC 연결설정이 보인다면 성공입니다.
 (VPC와 TGW 연결 설정은 생략하였음 AWS TGW 문서를 참조해주세요)
 
-- VPC 서브넷에 할당되어 있는 라우팅테이블을 변경합니다. (VPC 웹콘솔 - 라우팅테이블) 
+- VPC 서브넷에 할당되어 있는 라우팅테이블을 변경합니다. (VPC 웹콘솔 - 라우팅테이블) <br>
 ![TGW3](/files\blog\CVO\TGW3.png)
 
 모든 설정이 끝났습니다.<br>
@@ -202,7 +202,7 @@ Azure 쪽에 클라우드매니저 VM을 배포하고 AWS 측에 TEST용 EC2를 
 ![어림없는 소리!](/files\blog\CVO\어림도없지.png)
 
 트러블 슈팅을 해본 결과 <br>
-우리의 클라우드매니저가 Docker 이미지가 돌고 있는것이 확인됩니다.
+우리의 클라우드매니저가 Docker 이미지가 돌고 있는것이 확인됩니다.<br>
 ![Trapcard](/files\blog\CVO\Trapcard.png)
 
 그리고 잘 해결했습니다.<br>
