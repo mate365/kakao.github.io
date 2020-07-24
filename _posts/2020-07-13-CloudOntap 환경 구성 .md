@@ -98,7 +98,7 @@ https://docs.aws.amazon.com/ko_kr/vpn/latest/s2svpn/VPNTunnels.html
 ![VNG5](/files\blog\CVO\VNG5.png)<br>
 
 ## AWS TGW 생성
-- 웹콘솔에서 VPC > TGW 를 선택합니다.<br><br>
+- 웹콘솔에서 VPC > TGW 를 선택합니다.<br>
 ![VGW1](/files\blog\CVO\VGW1.png)<br>
 - 기본값으로 생성합니다. (옵션설명은 생락한다!)<br><br>
 ![VGW2](/files\blog\CVO\VGW2.png)
