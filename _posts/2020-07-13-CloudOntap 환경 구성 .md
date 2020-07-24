@@ -89,26 +89,27 @@ VPN 사이트 BGP 설정이 사용하도록 설정되면 항상 VPN 연결을 �
 https://docs.aws.amazon.com/ko_kr/vpn/latest/s2svpn/VPNTunnels.html
 ~~~
 
-- 체크한 상태로 만들었다면 구성에서 변경 가능합니다.
+- 체크한 상태로 만들었다면 구성에서 변경 가능합니다.<br>
 ![VNG6](/files\blog\CVO\VNG6.png)
 ![VNG4](/files\blog\CVO\VNG4.png)
 
 - 공용 IP를 주소를 복사하여 메모장에 기록합니다.<br>
 (만들어지는데 생각보다 오래걸립니다. 기다리지 말고 AWS콘솔로 넘어갑시다.) 
-![VNG5](/files\blog\CVO\VNG5.png)
+![VNG5](/files\blog\CVO\VNG5.png)<br>
 
 ## AWS TGW 생성
 - 웹콘솔에서 VPC > TGW 를 선택합니다.<br><br>
-![VGW1](/files\blog\CVO\VGW1.png)
+![VGW1](/files\blog\CVO\VGW1.png)<br>
 - 기본값으로 생성합니다. (옵션설명은 생락한다!)<br><br>
 ![VGW2](/files\blog\CVO\VGW2.png)
 
 - TGW 연결 생성 메뉴로 이동하여 연결생성 버튼을 누릅니다.<br>
-- 스크린샷에 나와있지 않지만 CGW(고객게이트웨이)가 없다면 NEW 라디오 박스를 체크 후 에저콘솔에서 생성된 IP를 등록해줍니다.
-- "Static" Check
+- 스크린샷에 나와있지 않지만 CGW(고객게이트웨이)가 없다면 NEW 라디오 박스를 체크 후 에저콘솔에서 생성된 가상 게이트웨이 IP를 등록해줍니다.
+
+- "Static" Check<br>
 ![VGW3](/files\blog\CVO\VGW3.png)
 
-- TGW의 VPN Connection이 생성되는지 확인!
+- TGW의 VPN Connection이 생성되는지 확인!<br>
 ![VGW4](/files\blog\CVO\VGW4.png)
 
 - 상단 구성에서 pfSense를 선택하고 다운로드 받습니다.<br>
@@ -116,6 +117,7 @@ https://docs.aws.amazon.com/ko_kr/vpn/latest/s2svpn/VPNTunnels.html
 ![VGW5](/files\blog\CVO\VGW5.png)
 
 - 텍스트 문서가 다운로드되면 문서안의 각 터널 1 터널 2 에대한 Pre-shard Key 값을 기억합니다. 
+
 ~~~
 Go to VPN-->IPSec. Add a new Phase1 entry (click + button )
 
