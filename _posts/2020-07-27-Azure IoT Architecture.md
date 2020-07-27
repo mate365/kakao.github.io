@@ -2,7 +2,7 @@
 layout: post
 title: "Azure IoT Architecture"
 author: yerim kim
-date: 2019-07-27 19:00
+date: 2020-07-27 10:45
 tags: [Azure, Architecture, IoT]
 ---
 
