@@ -11,7 +11,7 @@ IoT란 각종 사물에 센서와 통신 기능을 내장하여 무선 네트워
 # Azure IoT Reference Architecture
 
 Microsoft가 제안하는 Azure PaaS component를 이용한 아키텍처는 다음과 같습니다. 
-![](/files/blog/2020-07-27/IoT.png)
+![](/files/blog/2020-07-27/IoT2.png)
 
 
 Edge Device와 IoT 디바이스로부터 온 데이터의 형식을 변환해서 *Cold Path*와 *Warm Path*로 데이터를 나눠서 처리하고, 미리 수집한 데이터와 디바이스 데이터를 결합하여 머신러닝을 적용해 비즈니스 인사이트를 도출합니다.
