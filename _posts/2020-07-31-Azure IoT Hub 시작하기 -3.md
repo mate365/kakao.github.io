@@ -82,4 +82,4 @@ Logic Apps를 사용하여 Service Bus Queue에 메시지가 있는 경우, 해�
 >주의! : 앞서 큐에 모든 메시지를 저장하도록 설정한 경우, 메일 폭탄을 받을 수 있습니다. ![](/files/blog/2020-07-31/008.PNG)
 
 
-지금까지 3편의 포스팅에 걸쳐 IoT 허브를 생성하고, 다양한 엔드포인트로 데이터를 전송하는 방법을 알아보았습니다. [Azure IoT Architecture](https://tech.cloudmt.co.kr/2020/07/27/Azure-IoT-Architecture/)에서 IoT 허브와 Azure의 다양한 PaSS 서비스를 연동한 아키텍처도 참고하시길 바랍니다. 
+지금까지 3편의 포스팅에 걸쳐 IoT 허브를 생성하고, 다양한 엔드포인트로 데이터를 전송하는 방법을 알아보았습니다. [Azure IoT Architecture](https://tech.cloudmt.co.kr/2020/07/27/Azure-IoT-Architecture/)에서 IoT 허브와 Azure의 다양한 PaaS 서비스를 연동한 아키텍처도 참고하시길 바랍니다. 
