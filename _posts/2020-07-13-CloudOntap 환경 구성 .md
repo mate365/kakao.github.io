@@ -35,12 +35,12 @@ AWS DX와 같이 전용선 서비스를 사용하여 AWS 와 Azure 사이에 대
 		- 10.1.0.0/24 default
 		- 10.1.1.0/24 gatewaysubnet
 
-- AWS<br>
-	|Name|IPv4| CIDR|라우팅 테이블|
-	|---|---|---|---|
-	|wyahn-vpc-private-2c |172.17.10.0/24 |rtb-0e174629b72f9971b | wyahn-private-route|
-	|wyahn-vpc-private-2b |172.17.8.0/24 |rtb-0e174629b72f9971b | wyahn-private-route|
-	|wyahn-vpc-private-2a |172.17.9.0/24 |rtb-0e174629b72f9971b | wyahn-private-route|
+- AWS
+|Name|IPv4| CIDR|라우팅 테이블|
+|---|---|---|---|
+|wyahn-vpc-private-2c |172.17.10.0/24 |rtb-0e174629b72f9971b | wyahn-private-route|
+|wyahn-vpc-private-2b |172.17.8.0/24 |rtb-0e174629b72f9971b | wyahn-private-route|
+|wyahn-vpc-private-2a |172.17.9.0/24 |rtb-0e174629b72f9971b | wyahn-private-route|
 
 
 ## 2. AZure 가상 게이트웨이 생성
