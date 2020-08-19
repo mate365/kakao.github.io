@@ -71,7 +71,7 @@ Azure Machine Learning에서 생성할 수 있는 컴퓨팅 자원은 다음과 
 
 **참고 :** 열린 데이터세트란 Azure에서 제공하는 개방형 데이터 세트를 말합니다. [Azure 공개 데이터 세트](https://azure.microsoft.com/ko-kr/services/open-datasets/)
 
-![](/files/blog/2020-08-19/p6.PNG)
+![](/files/blog/2020-08-19/p6.png)
 
 ![](/files/blog/2020-08-19/p7.PNG)
 
