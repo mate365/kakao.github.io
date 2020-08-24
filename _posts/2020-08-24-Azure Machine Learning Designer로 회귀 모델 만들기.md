@@ -23,7 +23,7 @@ tags: [Azure, Microsoft Azure, Data Science, Machine Learning]
 
 Workspace와 컴퓨트 엔진은 지난 모듈을 실습할 때 만들었던 것을 그대로 사용합니다. 학습이 완료된 모델을 서비스에 배포하기 위해 Inference Clusters만 추가 생성합니다. 
 
-![유추 클러스터 만들기](/files/blog/2020-08-24/inference.png)
+![유추 클러스터 만들기](/files/blog/2020-08-24/Inference.png)
 
 
 실습에 이용할 데이터 세트는 제조사, 모델 및 기술 사양에 따른 다양한 자동차 가격 데이터입니다. Azure Machine Learning Designer에서 사용할 수 있는 샘플 데이터 중 하나입니다. 데이터 세트에 대한 자세한 설명은 원본 [데이터 저장소](https://archive.ics.uci.edu/ml/datasets/Automobile)에서 확인할 수 있습니다. 해당 데이터 세트에는 손실된 데이터가 있기 때문에 정제 작업이 필요합니다. *학습 파이프라인 - 데이터세트* 메뉴에서 **Automobile price data**를 검색하여 파이프라인 창에 드래그앤드롭으로 추가합니다.
