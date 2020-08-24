@@ -11,7 +11,7 @@ tags: [Azure, Microsoft Azure, Data Science, Machine Learning]
 
 ### 1. 회귀란 무엇일까?
 
-![자동차](/files/blog/2020-08-24/cars.png)
+![자동차의 가격을 예측하자](/files/blog/2020-08-24/cars.jpg)
 
 [지난 포스팅](https://tech.cloudmt.co.kr/2020/08/19/Azure-Machine-Learning/)에서도 특정 날짜의 자전거 대여 수를 예측하기 위해 회귀 분석을 사용하였습니다. 회귀는 특징(features)을 기반으로 numeric label을 예측하기 위해 사용하는 머신러닝 모델입니다. 예를 들어 중고 자동차 판매 회사는 엔진 크기, 시트 개수, 주행량 등 차의 특징을 이용하여 판매 가능한 가격을 예측할 수 있습니다. 이 경우, 차의 특징은 feature가 되고, 판매 가격은 label이 됩니다. 회귀는 알려진 값을 label로 사용하고 feature를 학습에 사용합니다. 학습이 끝나면, 알려지지 않은 새로운 항목에 대해 label을 예측하는 데 모델을 사용할 수 있습니다. Microsoft Azure Machine Learning designer를 사용하면 회귀 모델을 드로그앤드롭 방식으로 만들 수 있습니다. 이 모듈에서는
 
@@ -28,7 +28,7 @@ Workspace와 컴퓨트 엔진은 지난 모듈을 실습할 때 만들었던 것
 
 실습에 이용할 데이터 세트는 제조사, 모델 및 기술 사양에 따른 다양한 자동차 가격 데이터입니다. Azure Machine Learning Designer에서 사용할 수 있는 샘플 데이터 중 하나입니다. 데이터 세트에 대한 자세한 설명은 원본 [데이터 저장소](https://archive.ics.uci.edu/ml/datasets/Automobile)에서 확인할 수 있습니다. 해당 데이터 세트에는 손실된 데이터가 있기 때문에 정제 작업이 필요합니다. *학습 파이프라인 - 데이터세트* 메뉴에서 **Automobile price data**를 검색하여 파이프라인 창에 드래그앤드롭으로 추가합니다.
 
-![automobile price data](/files/blog/2020-08-24/desigber.png)
+![Automobile price data](/files/blog/2020-08-24/designer.png)
 
 이 데이터 집합의 지표 중 몇 가지를 살펴보겠습니다. 
 
@@ -45,29 +45,29 @@ Workspace와 컴퓨트 엔진은 지난 모듈을 실습할 때 만들었던 것
 
 (1) *학습 파이프라인-모듈*에 **Select Columns in Dataset**을 검색하여 드래그앤드롭으로 파이프라인 창에 추가하고, 데이터 세트와 화살표를 연결합니다.
 
-![select columns](/files/blog/2020-08-24/model.png)
+![Select columns](/files/blog/2020-08-24/selectcolumns.png)
 
 (2) 데이터 세트에서 사용할 열을 선택합니다. normalized-losses를 제외한 모든 열의 이름을 입력합니다.
 
-![select columns](/files/blog/2020-08-24/select.png)
+![Select columns](/files/blog/2020-08-24/select.png)
 
 (3) 손실된 데이터를 정제하기 위한 모듈을 추가합니다. **Clean Missing Data**를 검색하여 파이프라인 창에 추가하고, 다음 설정을 입력합니다. 손실된 데이터가 있는 Bore, stroke, horsepower column을 선택하고, 결측 값이 있는 열의 줄을 제거하도록 설정합니다.
 
-![clean data](/files/blog/2020-08-24/cleandata.png)
+![Clean data](/files/blog/2020-08-24/cleandata.png)
 
 (4) 데이터를 정규화하기 위한 모듈을 추가합니다. **Normalize Data**를 파이프라인 창에 추가하고, 정규화할 column의 이름을 입력합니다. 
 
-- symboling, wheel-base, length, width, height, curb-weight, engine-size, bore, stroke, compression-ratio, horsepower, peak-rpm, city-mpg, highway-mpg
+> symboling, wheel-base, length, width, height, curb-weight, engine-size, bore, stroke, compression-ratio, horsepower, peak-rpm, city-mpg, highway-mpg
 
-![nomalizedata](/files/blog/2020-08-24/nomalizedata.png)
+![Nomalizedata](/files/blog/2020-08-24/nomalizedata.png)
 
 (5) **제출**을 클릭하여 파이프라인 실행 후, 결과를 검토합니다. 결측 값이 있던 **Stroke** Column을 자세히 살펴보겠습니다. 
 
-![before](/files/blog/2020-08-24/before.png)
+![Before](/files/blog/2020-08-24/before.png)
 
 아무런 처리도 하지 않은 상태의 stroke 데이터는 3.15와 3.39 사이 누락된 값이 4개 존재하는 것을 볼 수 있습니다. 
 
-![after](/files/blog/2020-08-24/after.png)
+![After](/files/blog/2020-08-24/after.png)
 
 손실 데이터를 정제하는 모듈과 정규화하는 모듈을 거친 후 데이터를 각각 확인해보았습니다. 손실 값이 없어지고, 정규화 결과에 따라 최대값은 1, 최소값은 0이 된 것을 확인할 수 있습니다. 
 
@@ -78,13 +78,13 @@ Workspace와 컴퓨트 엔진은 지난 모듈을 실습할 때 만들었던 것
 
 (1) **Split Data**를 검색하여 파이프라인 창에 추가하고, 다음 설정을 사용하여 데이터를 나눕니다.
 
-![splitdata](/files/blog/2020-08-24/splitdata.png)
+![Splitdata](/files/blog/2020-08-24/splitdata.png)
 
 (2) **Train Model** 모듈을 검색하여 파이프라인 창에 추가합니다. **Split Data** 결과로 나온 70%의 데이터를 **Train Model**에 연결합니다. **Train Model**의 매개 변수의 **Label column**에는 학습을 통해 추정하고 싶은 변수를 입력합니다. 여기서는 자동차의 가격을 추정할 것이기 때문에 **price**를 입력합니다.
 
 (2) **Linear Regression**을 검색하여 파이프라인 창에 추가하고, **Train Model**에 연결합니다.
 
-![regression 설정](/files/blog/2020-08-24/regression.png)
+![Regression 설정](/files/blog/2020-08-24/regression.png)
 
 **참고 :** OLS(Ordinary Least Squares)는 가장 기본적인 선형 회귀 방법입니다. 잔차제곱합(오차를 제곱한 합계)을 최소화하는 가중치 벡터를 행렬 미분으로 구하는 방법입니다. 
 
@@ -98,7 +98,7 @@ Workspace와 컴퓨트 엔진은 지난 모듈을 실습할 때 만들었던 것
 
 (5) 학습을 바탕으로 추론한 결과가 얼마나 정확한지 평가할 차례입니다. **Evaluate Model** 모듈을 검색하여 파이프라인 창에 추가합니다. 실행 후 결과를 검토합니다.
 
-![evaluate model](/files/blog/2020-08-24/evaluate.png)
+![Evaluate model](/files/blog/2020-08-24/evaluate.png)
 
 **참고 :** 5가지 평가 지표의 의미는 다음과 같습니다. 
 
