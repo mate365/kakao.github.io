@@ -143,7 +143,7 @@ except urllib.error.HTTPError as error:
 
 (6) 저장하고 실행한 후, 결과를 확인합니다.
 
-![결과로 출력된 가격 label](/files/blog/2020-08-24/result2.PNG)
+![결과로 출력된 가격 label](/files/blog/2020-08-24/result2.png)
 
 (7) 사용을 마친 컴퓨팅 인스턴스와 유추 클러스터는 중지하거나 삭제하여 불필요한 과금을 방지합니다. 
 
