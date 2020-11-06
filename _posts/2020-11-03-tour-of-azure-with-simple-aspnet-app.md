@@ -137,7 +137,7 @@ namespace StudentApi.Controllers
     }
 }
 ```
-# Open API 명세로 코드 생성하기. 코드에서 다시 API 문서 생성하기.
+# Open API 명세로 코드를, 코드에서 다시 API 문서 생성하기.
 고객사와 논의를 통해 API 명세가 확정되면 이를 기반으로, 빠르게 구현을 시작하기 위해 Open API 명세에서 코드를 자동으로 생성하는 도구와.
 작성된 코드에 연동하면 API 문서를 자동으로 생성하는 도구도 같이 검토했다. 그렇게 검토한 것이 Swagger Codegen과 Swagger UI 이다.
 Swagger UI는 API 문서 생성 자동화를 위해 이미 많이 사용하는 경우가 많아 익숙할 것이다. Swagger Codegen은? 이름에서 유추할 수 있듯. 
@@ -149,5 +149,121 @@ Spring 이나 ASP.NET 같은 프레임워크는 프로젝트 초기화와 구성
 (요세는 그래도 Spring 쪽은 Spring Boot 가 나오고, .Net 은 .Net CLI 로 스캐폴드가 가능해서 많이 간단해졌다) 
 Swagger Codegen 에 미리 작성한 API 명세를 넣고 실행하여 코드를 생성함으로써, 이 과정 전체를 건너뛸 수 있다.
 
+아래와 같은 Open API 3.0 명세 예제에서 코드를 자동 생성해 보자. (참고로 API 명세 코드가 아래로 기니 스크롤에 유의하자.)
+![](/files/blog/2020-11-03/apidoc.png)
+```yaml
+openapi: 3.0.1
+info:
+  title: StudentApi
+  version: '1.0'
+paths:
+  "/Students":
+    get:
+      tags:
+      - Students
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Student"
+    post:
+      tags:
+      - Students
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Student"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Student"
+  "/Students/{id}":
+    get:
+      tags:
+      - Students
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Student"
+    put:
+      tags:
+      - Students
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Student"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Student"
+    delete:
+      tags:
+      - Students
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success
+components:
+  schemas:
+    StudentStatus:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      format: int32
+    Student:
+      required:
+      - major
+      - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        major:
+          type: string
+        status:
+          "$ref": "#/components/schemas/StudentStatus"
+      additionalProperties: false
+
+```
 
 
