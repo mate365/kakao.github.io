@@ -149,7 +149,7 @@ Spring 이나 ASP.NET 같은 프레임워크는 프로젝트 초기화와 구성
 (요세는 그래도 Spring 쪽은 Spring Boot 가 나오고, .Net 은 .Net CLI 로 스캐폴드가 가능해서 많이 간단해졌다) 
 Swagger Codegen 에 미리 작성한 API 명세를 넣고 실행하여 코드를 생성함으로써, 이 과정 전체를 건너뛸 수 있다.
 
-아래와 같은 Open API 3.0 명세 예제에서 코드를 자동 생성해 보자. (참고로 API 명세 코드가 아래로 기니 스크롤에 유의하자.)
+아래와 같은 Open API 3.0 명세 예제에서 코드를 자동 생성해 보자. Student 라는 데이터를 만들고, 읽고, 고치고, 지우는 간단한 API 명세이다. 
 ![](/files/blog/2020-11-03/apidoc.png)
 ```yaml
 openapi: 3.0.1
@@ -265,5 +265,159 @@ components:
       additionalProperties: false
 
 ```
+아래 명령을 실행하여, Swagger Codegen을 받고 코드를 자동으로 생성하자. 실행하려면, Java가 필요하다. 
+`studentapi` 디렉토리에, [명령 실행 시 버전 옵션을 넣지 않았으므로, 글 작성 시점 기준 ASP.Net Core 3.1 코드가 생성된다.](https://github.com/swagger-api/swagger-codegen-generators/blob/b4261015ab25bf7c206e7e87b9f5e1c0ff1efb17/src/main/java/io/swagger/codegen/v3/generators/dotnet/AspNetCoreServerCodegen.java#L33)
 
+```bash
+# Wget 으로 Swagger Codegen *.jar 파일 받기
+wget https://repo1.maven.org/maven2/io/swagger/codegen/v3/swagger-codegen-cli/3.0.23/swagger-codegen-cli-3.0.23.jar -O swagger-codegen-cli.jar
 
+mkdir studentapi
+
+# Swagger Codegen 으로 서버 코드 생성
+# -i : API 명세 파일 또는 URL 지정
+# -l : ASP.NET Core 코드를 생성하도록 지정
+# -o : 지정 디렉토리에 생성된 코드 저장
+java -jar swagger-codegen-cli.jar generate \
+  -i spec.yml -l aspnetcore -o studentapi 
+```
+
+![](/files/blog/2020-11-03/codegenfiles.png)
+그러면 위와 같은 프로젝트와 코드가 생성된다. 이 글에서 코드를 다 보여주긴 어려우니, `StudentsApi.cs` 컨트롤러 파일만 한번 보자.
+
+```cs
+using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
+using IO.Swagger.Attributes;
+
+using Microsoft.AspNetCore.Authorization;
+using IO.Swagger.Models;
+namespace IO.Swagger.Controllers
+{ 
+    /// <summary>
+    /// 
+    /// </summary>
+    [ApiController]
+    public class StudentsApiController : ControllerBase
+    { 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <response code="200">Success</response>
+        [HttpGet]
+        [Route("/Students")]
+        [ValidateModelState]
+        [SwaggerOperation("StudentsGet")]
+        [SwaggerResponse(statusCode: 200, type: typeof(List<Student>), description: "Success")]
+        public virtual IActionResult StudentsGet()
+        { 
+            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
+            // return StatusCode(200, default(List<Student>));
+            string exampleJson = null;
+            exampleJson = "[ {\n  \"major\" : \"major\",\n  \"name\" : \"name\",\n  \"id\" : 0,\n  \"status\" : 6\n}, {\n  \"major\" : \"major\",\n  \"name\" : \"name\",\n  \"id\" : 0,\n  \"status\" : 6\n} ]";
+            
+                        var example = exampleJson != null
+                        ? JsonConvert.DeserializeObject<List<Student>>(exampleJson)
+                        : default(List<Student>);            //TODO: Change the data returned
+            return new ObjectResult(example);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="200">Success</response>
+        [HttpDelete]
+        [Route("/Students/{id}")]
+        [ValidateModelState]
+        [SwaggerOperation("StudentsIdDelete")]
+        public virtual IActionResult StudentsIdDelete([FromRoute][Required]long? id)
+        { 
+            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
+            // return StatusCode(200);
+
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="200">Success</response>
+        [HttpGet]
+        [Route("/Students/{id}")]
+        [ValidateModelState]
+        [SwaggerOperation("StudentsIdGet")]
+        [SwaggerResponse(statusCode: 200, type: typeof(Student), description: "Success")]
+        public virtual IActionResult StudentsIdGet([FromRoute][Required]long? id)
+        { 
+            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
+            // return StatusCode(200, default(Student));
+            string exampleJson = null;
+            exampleJson = "{\n  \"major\" : \"major\",\n  \"name\" : \"name\",\n  \"id\" : 0,\n  \"status\" : 6\n}";
+            
+                        var example = exampleJson != null
+                        ? JsonConvert.DeserializeObject<Student>(exampleJson)
+                        : default(Student);            //TODO: Change the data returned
+            return new ObjectResult(example);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="body"></param>
+        /// <response code="200">Success</response>
+        [HttpPut]
+        [Route("/Students/{id}")]
+        [ValidateModelState]
+        [SwaggerOperation("StudentsIdPut")]
+        [SwaggerResponse(statusCode: 200, type: typeof(Student), description: "Success")]
+        public virtual IActionResult StudentsIdPut([FromRoute][Required]long? id, [FromBody]Student body)
+        { 
+            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
+            // return StatusCode(200, default(Student));
+            string exampleJson = null;
+            exampleJson = "{\n  \"major\" : \"major\",\n  \"name\" : \"name\",\n  \"id\" : 0,\n  \"status\" : 6\n}";
+            
+                        var example = exampleJson != null
+                        ? JsonConvert.DeserializeObject<Student>(exampleJson)
+                        : default(Student);            //TODO: Change the data returned
+            return new ObjectResult(example);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="body"></param>
+        /// <response code="200">Success</response>
+        [HttpPost]
+        [Route("/Students")]
+        [ValidateModelState]
+        [SwaggerOperation("StudentsPost")]
+        [SwaggerResponse(statusCode: 200, type: typeof(Student), description: "Success")]
+        public virtual IActionResult StudentsPost([FromBody]Student body)
+        { 
+            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
+            // return StatusCode(200, default(Student));
+            string exampleJson = null;
+            exampleJson = "{\n  \"major\" : \"major\",\n  \"name\" : \"name\",\n  \"id\" : 0,\n  \"status\" : 6\n}";
+            
+                        var example = exampleJson != null
+                        ? JsonConvert.DeserializeObject<Student>(exampleJson)
+                        : default(Student);            //TODO: Change the data returned
+            return new ObjectResult(example);
+        }
+    }
+}
+
+```
+
+이 글의 초반에 보여준 예제 컨트롤러 코드와 같은 형태의 코드가 생성된 것을 볼 수 있다. 다만, 앞서 예기한 것 처럼 내부에 로직이 구현되어 있지는 않고, 
+테스트 해 볼 수 있도록 샘플 데이터만 반환 하도록 되어 있다. 추가적으로 각 함수마다 Swagger 를 통한 API 문서화를 위해 각 함수마다 주석과 함께 Swashbuckle이 제공하는 각종 속성이 붙어있는 것을 볼 수 있다. 
+이렇게 미리 구현된 각 메소드 내부에 추후 로직을 구현하는 방식으로 초반에 시간을 아낄 수 있다.
