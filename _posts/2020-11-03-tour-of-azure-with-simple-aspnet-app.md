@@ -421,3 +421,50 @@ namespace IO.Swagger.Controllers
 이 글의 초반에 보여준 예제 컨트롤러 코드와 같은 형태의 코드가 생성된 것을 볼 수 있다. 다만, 앞서 예기한 것 처럼 내부에 로직이 구현되어 있지는 않고, 
 테스트 해 볼 수 있도록 샘플 데이터만 반환 하도록 되어 있다. 추가적으로 각 함수마다 Swagger 를 통한 API 문서화를 위해 각 함수마다 주석과 함께 Swashbuckle이 제공하는 각종 속성이 붙어있는 것을 볼 수 있다. 
 이렇게 미리 구현된 각 메소드 내부에 추후 로직을 구현하는 방식으로 초반에 시간을 아낄 수 있다.
+
+위 코드의 각 메소드에 Swashbuckle이 제공하는 특성이 붙은걸 보면 짐작할 수 있겠지만, Swagger Codegen으로 생성한 코드에는 이미 Swashbuckle까지 설정이 되어 있다.
+프로그램 실행 시 각종 서비스와 플러그인 등을 구성하는 `Startup.cs` 의 `ConfigureServices()`, `Configure()` 를 보면 이를 확인할 수 있다.
+
+```cs
+...
+public void ConfigureServices(IServiceCollection services)
+{
+    ...
+    services
+        .AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("1.0", new OpenApiInfo
+            {
+                Version = "1.0",
+                Title = "StudentApi",
+                Description = "StudentApi (ASP.NET Core 3.1)",
+                Contact = new OpenApiContact()
+                {
+                   Name = "Swagger Codegen Contributors",
+                   Url = new Uri("https://github.com/swagger-api/swagger-codegen"),
+                   Email = ""
+                },
+                TermsOfService = new Uri("")
+            });
+            c.CustomSchemaIds(type => type.FullName);
+            c.IncludeXmlComments($"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}{_hostingEnv.ApplicationName}.xml");
+            // Include DataAnnotation attributes on Controller Action parameters as Swagger validation rules (e.g required, pattern, ..)
+            // Use [ValidateModelState] on Actions to actually validate it in C# as well!
+            c.OperationFilter<GeneratePathParamsValidationFilter>();
+        });
+}
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+{
+    ...
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        //TODO: Either use the SwaggerGen generated Swagger contract (generated from C# classes)
+        c.SwaggerEndpoint("/swagger/1.0/swagger.json", "StudentApi");
+        //TODO: Or alternatively use the original Swagger contract that's included in the static files
+        // c.SwaggerEndpoint("/swagger-original.json", "StudentApi Original");
+    });
+    ...
+}
+...
+```
