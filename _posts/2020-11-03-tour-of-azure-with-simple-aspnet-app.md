@@ -282,7 +282,7 @@ java -jar swagger-codegen-cli.jar generate \
   -i spec.yml -l aspnetcore -o studentapi 
 ```
 
-![](/files/blog/2020-11-03/codegenfiles.png)
+![](/files/blog/2020-11-03/codegenfiles.png)   
 그러면 위와 같은 프로젝트와 코드가 생성된다. 이 글에서 코드를 다 보여주긴 어려우니, `StudentsApi.cs` 컨트롤러 파일만 한번 보자.
 
 ```cs
@@ -467,4 +467,34 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerF
     ...
 }
 ...
+```
+
+# EF Core ORM 코드도 자동으로 생성하기
+데이터를 쌓으려면 당연히 DB도 필요하고, ORM이나 Query Mapper, DB 드라이버도 필요하다. .Net 쪽에서는 주로 EF Core라는 ORM을 많이 사용해서,
+이를 사용하는 방향으로 검토했다. EF Core 의 경우에는 이미 DB 테이블 스키마마 만들어져 있는 DB 서버에 접속해서 이를 C# 코드로 리버스 엔지니어링 하는 기능이 있다.
+마치 Swagger Codegen 이 하는 역할과 비슷한 기능이다. 그래서 검토한 방안은 같이 프로젝트 하는 .Net 뿐만 아니라 데이터베이스까지 잘 다루시는 정우님께서 MySQL 서버에 스키마를 짜서 올려두면, 
+이를 .Net CLI 의 EF Core 관련 기능으로 리버스 엔지니어링 해서 C# 코드로 변환하는 것이다. 그러면 EF Core 의 쿼리 함수로 처리 가능한 부분은 컨트롤러 부분에서 호출해서 사용하고, 
+이걸로 부족할 정도로 복잡한 쿼리는 정우님께서 SQL 질의나 프로시저로 처리해 주시는 방법으로 하기로 했다.
+
+위에서 다룬 Student API 에 사용할 테이블을 하나 작업한다 가정하고 예를 들어 설명해 보자. 먼저 MySQL DB 서버가 하나 필요하다.
+테스트용 Azure Database for MySQL 서버를 하나 배포해서 사용해 보자. Azure Portal에 접속하여 Azure Database for MySQL 서버를 검색한 후, 새로 생성 화면을 들어가면.
+아래 화면이 바로 나오진 않고, 단일 서버와 유연한 서버(미리보기) 선택지가 나온다. 유연한 서버는 아직 미리보기 단계여서 SLA 등 보장이 없으니 단일 서버를 선택하자.
+
+![](/files/blog/2020-11-03/azuremysql.png)
+
+그리고 목적에 맞게 리소스 그룹, 백업 여부, 위치, 버전, 성능 등을 설정해 주자. 필자의 경우 DB를 테스트 용도로만 잠깐 쓸 용도여서 위와 같이 설정하였다.
+만약 프로덕션으로 사용할 경우, 백업 설정을 해 주고 컴퓨팅+스토리지 선택지는 기본이 아닌 범용이나 메모리 최적화 선택지를 선택하는 것이 적합할 것이다.
+
+![](/files/blog/2020-11-03/dbfirewall.png)
+
+DB에 접속하기 위해 DB 서버 방화벽 설정을 해서 사용중인 컴퓨터가 접속 할 수 있게 허용해 줘야 한다. 이는 생성한 DB서버 화면의 `연결 보안` 으로 들어가서 IP를 허용하도록 설정할 수 있다.
+여기서 화면 상단에 `현재 클라이언트 IP주소 추가(x.x.x.x)` 를 클릭하여 현재 Azure Portal 에 접속중인 본인의 PC IP 추가가 가능하다. 클릭하여 추가한 뒤 저장한다.
+이제 DB 에 접속하여 간단한 DB와 테이블을 하나 생성하자. 먼저 `개요`로 들어가 연결 정보를 확인한다. 그리고 이를 이용해 DB서버에 접속한다. 
+여기서는 MySQL CLI 클라이언트로 접속했지만, MySQL Workbench, QueryPie 등으로 접속해서 사용해도 좋다. 만약 접속에 사용할 관리자 암호를 분실했다면, `개요`화면의 `암호 재설정` 버튼으로 초기화 하면 된다.
+
+![](/files/blog/2020-11-03/dbinfo.png)
+
+```bash
+# mysql -h <서버 이름> -u <서버 관리자 로그인 이름> -p
+mysql -h mydemoserver.mysql.database.azure.com -u myadmin@mydemoserver -p
 ```
