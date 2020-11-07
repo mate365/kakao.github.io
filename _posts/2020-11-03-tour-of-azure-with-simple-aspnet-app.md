@@ -543,3 +543,41 @@ namespace IO.Swagger.Models
 }
 
 ```
+
+`DatabaseContext.cs`는 열어보면, `OnConfiguring`메소드에 앞서 명령행에서 같이 입력한 연결 문자열이 그대로 들어가 있는 것을 볼 수 있을 것이다. 당연하게도 저 상태로 배포하는 것이 아니라 설정 파일이나 환경 변수로 분리해야 한다. ASP.NET 의 경우 `appsettings.json` 에 DB 연결 문자열 등 설정값을 저장한다.
+
+```cs
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseMySql("server=mydemoserver.mysql.database.azure.com;database=student;user=myadmin@mydemoserver;password=password;", x => x.ServerVersion("8.0.15-mysql"));
+            }
+        }
+```
+`appsettings.json` 에 `ConnectionString` 을 추가하고 그 아래에 `DatabaseContext` 항목을 넣어 그 값으로 연결 문자열을 넣어준다.
+```json
+{
+  "ConnectionStrings": {
+    "DatabaseContext": "server=mydemoserver.mysql.database.azure.com;database=student;user=myadmin@mydemoserver;password=password;"
+  },
+  ...
+}
+```
+그리고 `Startup.cs`의 `ConfigureServices()` 메소드에 DB 컨텍스트를 종속성 주입으로 설정해 준다. 이제 `DatabaseContext.cs`의 `OnConfiguring()`메소드는 더이상 필요하지 않으니, 통째로 지워준다.
+```cs
+...
+public void ConfigureServices(IServiceCollection services)
+{
+    ... 
+    services.AddDbContext<ApplicationDbContext>(options =>
+         options.UseMySql(
+             Configuration.GetConnectionString("DatabaseContext"),
+             mySqlOptions => mySqlOptions
+                     .ServerVersion(new Version(8, 0, 15), ServerType.MySql)));
+    ...
+}
+...
+```
+
