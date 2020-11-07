@@ -498,3 +498,48 @@ DB에 접속하기 위해 DB 서버 방화벽 설정을 해서 사용중인 컴�
 # mysql -h <서버 이름> -u <서버 관리자 로그인 이름> -p
 mysql -h mydemoserver.mysql.database.azure.com -u myadmin@mydemoserver -p
 ```
+이제 아래 명령으로 데이터베이스를 하나 생성하고, `students`테이블도 하나 생성하자.
+```sql
+CREATE DATABASE student;
+USE student;
+CREATE TABLE students(
+    id serial PRIMARY KEY,
+    name VARCHAR(50),
+    major VARCHAR(50),
+    status INTEGER
+);
+```
+
+프로젝트는 앞서 Swagger Codegen 으로 생성한 프로젝트를 활용해 보자. 먼저 해당 프로젝트에 패키지를 추가하고, EF Core 관련 도구도 설치하자.
+아래 명령은 .Net CLI 에서 사용 가능한  EF Core 툴을 설치하고, 프로젝트에 DB설계 도구와 EF Core용 MySQL 드라이버를 설치한다. 
+이 글에서는 [Pomelo Foundation 의 것](https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql)으로 설치 했는데, [Oracle의 MySQL 팀이 제공하는 EF Core 용 공식 드라이버](https://www.nuget.org/packages/MySql.Data.EntityFrameworkCore)도 있다. 다만 오라클 제공 드라이버는 라이센스가 GPL 이여서 파생 프로젝트에 GPL을 사용해야 할 수도 있어(보통 예외 조항이 있는 경우가 많다.), MIT 라이센스를 사용하는 Pomelo Foundation 것으로 일단 편하게 선택했다.
+```bash
+dotnet tool install --global dotnet-ef
+dotnet add package Microsoft.EntityFrameworkCore.Design
+dotnet add package Pomelo.EntityFrameworkCore.MySql
+```
+
+그리고 아래 .Net CLI 명령으로 스캐폴드 한다. 그러면 자동으로 DB 서버에서 리버스 엔지니어링 하여 EF Core API 를 사용하는 C# 코드가 생성된다.
+아래 명령어 대로 하면, Models 아래에 `DatabaseContext.cs`와 `Students.cs` 파일이 생성된다
+```bash
+# dotnet ef dbcontext scaffold "DB 연결 문자열" "Pomelo.EntityFrameworkCore.MySql" -c <컨텍스트 이름> --output-dir <코드 생성할 디렉토리(상대경로)>
+# dotnet ef dbcontext scaffold "Server=<서버 이름>; Port=3306; Database=<DB이름>; Uid=<로그인 이름>; Pwd=<로그인 암호>; SslMode=Preferred;" "Pomelo.EntityFrameworkCore.MySql" -c DatabaseContext --output-dir Models
+dotnet ef dbcontext scaffold "Server=mydemoserver.mysql.database.azure.com; Port=3306; Database=student; Uid=myadmin@mydemoserver; Pwd={your_password}; SslMode=Preferred;" "Pomelo.EntityFrameworkCore.MySql" -c DatabaseContext --output-dir Models
+```
+생성된 파일 중 `Students.cs` 만 열어 보자면, 아래와 같이 생성되어 있음을 확인할 수 있다.
+```cs
+using System;
+using System.Collections.Generic;
+
+namespace IO.Swagger.Models
+{
+    public partial class Student
+    {
+        public ulong Id { get; set; }
+        public string Name { get; set; }
+        public string Major { get; set; }
+        public int? Status { get; set; }
+    }
+}
+
+```
