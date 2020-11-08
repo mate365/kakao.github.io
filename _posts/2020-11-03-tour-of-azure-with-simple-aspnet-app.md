@@ -580,4 +580,52 @@ public void ConfigureServices(IServiceCollection services)
 }
 ...
 ```
+이제 DB 설정과 컨트롤러 코드 틀이 준비 되었으니. 실제 데이터를 넣고, 조회하고, 수정하고, 삭제하는 작업을 컨트롤러단에서 구현하자. 이 글의 초반에 나온 코드를 참고하여 작성하면 된다.
+생성자에서 `Startup.cs` 에서 설정한 DB Context 를 주입받도록 생성자를 작성하고, 주입받은 DB Context 로 질의를 하거나 쓰기 작업을 해서 데이터를 반환하도록 작성하면 된다.
+아래 예시에서는 DB Context 주입받는 생성자와 `GET /Students/{id}` API 구현한 예제만 넣어 보았다.
+```cs
+namespace IO.Swagger.Controllers
+{ 
+    // EF Core Database context
+    private readonly DatabaseContext _context;
+    public StudentsController(DatabaseContext context)
+    {
+        _context = context;
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    [ApiController]
+    public class StudentsApiController : ControllerBase
+    { 
+        ...
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="200">Success</response>
+        [HttpGet]
+        [Route("/Students/{id}")]
+        [ValidateModelState]
+        [SwaggerOperation("StudentsIdGet")]
+        [SwaggerResponse(statusCode: 200, type: typeof(Student), description: "Success")]
+        public virtual IActionResult StudentsIdGet([FromRoute][Required]long? id)
+        {
+            var student = await _context.Students.FindAsync(id);
+            if (student == null)
+            {
+                return NotFound();
+            }
+            return student; 
+        }
+        ...
+    }
+    ...
+}
+```
 
+# 배포
+자. 이제 드디어 배포를 해 보자. 프로젝트 소스코드는 회사에서 Azure DevOps 를 사용해서, Azure DevOps 가 제공하는 Azure Repos 로 관리한다.
+그리고 배포에는 Azure App Service 를 사용하기로 했는데, 둘 다 Azure 서비스 여서 마우스 클릭 몇번으로 배포 연동이 가능하다.
+Azure DevOps 에 대한 소개는 영진님의 글에 잘 나와있어서, 이걸 참고하면 좋고. Azure Repos 에 소스코드 커밋 올리는건 GitHub등 다른 플랫폼과 방법 유사하니 생략하겠다.
+여기선 바로 Azure App Service 하나 생성하고, Azure Repos 에 소스코드가 올라와 있다고 가정하고 배포 연동을 해 보자.
