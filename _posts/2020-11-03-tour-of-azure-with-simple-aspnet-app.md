@@ -266,7 +266,7 @@ components:
 
 ```
 아래 명령을 실행하여, Swagger Codegen을 받고 코드를 자동으로 생성하자. 실행하려면, Java가 필요하다. 
-`studentapi` 디렉토리에, [명령 실행 시 버전 옵션을 넣지 않았으므로, 글 작성 시점 기준 ASP.Net Core 3.1 코드가 생성된다.](https://github.com/swagger-api/swagger-codegen-generators/blob/b4261015ab25bf7c206e7e87b9f5e1c0ff1efb17/src/main/java/io/swagger/codegen/v3/generators/dotnet/AspNetCoreServerCodegen.java#L33)
+`studentapi` 디렉토리에, [명령 실행 시 버전 옵션을 넣지 않았으므로, 글 작성 시점 기준 .Net Core 3.1 코드가 생성된다.](https://github.com/swagger-api/swagger-codegen-generators/blob/b4261015ab25bf7c206e7e87b9f5e1c0ff1efb17/src/main/java/io/swagger/codegen/v3/generators/dotnet/AspNetCoreServerCodegen.java#L33)
 
 ```bash
 # Wget 으로 Swagger Codegen *.jar 파일 받기
@@ -627,5 +627,16 @@ namespace IO.Swagger.Controllers
 # 배포
 자. 이제 드디어 배포를 해 보자. 프로젝트 소스코드는 회사에서 Azure DevOps 를 사용해서, Azure DevOps 가 제공하는 Azure Repos 로 관리한다.
 그리고 배포에는 Azure App Service 를 사용하기로 했는데, 둘 다 Azure 서비스 여서 마우스 클릭 몇번으로 배포 연동이 가능하다.
-Azure DevOps 에 대한 소개는 영진님의 글에 잘 나와있어서, 이걸 참고하면 좋고. Azure Repos 에 소스코드 커밋 올리는건 GitHub등 다른 플랫폼과 방법 유사하니 생략하겠다.
+[Azure DevOps 에 대한 소개는 영진님의 글에 잘 나와있어서, 이걸 참고하면 좋고.](/2020/07/10/AzureDevopsOnAKS1) [Azure Repos 에 소스코드 커밋 올리는건 GitHub등 다른 플랫폼과 방법 유사하니 생략하겠다.](https://docs.microsoft.com/ko-kr/azure/devops/repos/git/create-new-repo)
 여기선 바로 Azure App Service 하나 생성하고, Azure Repos 에 소스코드가 올라와 있다고 가정하고 배포 연동을 해 보자.
+![](/files/blog/2020-11-03/newappservice.png)
+
+Azure Portal 검색창에서 `App Services` 를 검색하고 들어간 다음, `추가`를 클릭하면 위와 같은 화면이 나온다. 리소스 그룹과 이름을 적절히 지정하고, 
+게시는 `코드`로(`Docker 컨테이너`는 여기서 `Dockerfile`를 작성하거나 컨테이너 이미지를 따로 빌드 하지 않았으니 해당사항이 아니다.), 런타임 스택은 우리가 올릴 Swagger Codegen 생성물 기반 코드가 .Net Core 3.1 기준으로 생성 되었으니, `.Net Core 3.1 (LTS)` 항목으로 선택한다. 그리고 앱 서비스 플랜(요금제) 와 서비스 사양도 선택한다. 여기서는 테스트 용도로만 사용할 목적이여서 D1 으로 선택했지만, 실제 서비스로 사용하려면 S1 이상으로 사용해야 한다. 그래야 자동 크기 조정(Autoscale), 앱 백업, 테스트 환경 별도 배포를 위한 스테이징 슬롯 등. 프로덕션 환경 앱 배포를 위한 기능을 사용할 수 있다.
+
+![](/files/blog/2020-11-03/s1spec.png)
+> 위 사진은 S1 요금제가 제공하는 하드웨어 사양과 기능을 보여준다.
+
+App Service 리소스를 생성했다면, 앞서 생성한 Azure Database for MySQL 과의 연결 설정을 먼저 하자. 앞에서 Azure MySQL 에 컴퓨터에서 접속하기 위해 방화벽 설정을 했듯, 이번에는 App Service 에 대해 방화벽 설정을 해야 한다. App Service 리소스의 IP 를 허용해 주면 되는데, 이 IP는 App Service 리소스의 `설정 -> 속성` 화면에 들어가면 쉼표로 구분된 `아웃바운드 IP주소`가 있다. 여기 나온 IP 를 복사해서 Azure Database for MySQL 리소스 연결보안 화면의 방화벽 규칙에 추가하면 된다.
+![](/files/blog/2020-11-03/appsvcoutbound.png)
+![](/files/blog/2020-11-03/dbfirewall2.png)
