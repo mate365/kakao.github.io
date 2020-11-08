@@ -640,3 +640,23 @@ Azure Portal 검색창에서 `App Services` 를 검색하고 들어간 다음, `
 App Service 리소스를 생성했다면, 앞서 생성한 Azure Database for MySQL 과의 연결 설정을 먼저 하자. 앞에서 Azure MySQL 에 컴퓨터에서 접속하기 위해 방화벽 설정을 했듯, 이번에는 App Service 에 대해 방화벽 설정을 해야 한다. App Service 리소스의 IP 를 허용해 주면 되는데, 이 IP는 App Service 리소스의 `설정 -> 속성` 화면에 들어가면 쉼표로 구분된 `아웃바운드 IP주소`가 있다. 여기 나온 IP 를 복사해서 Azure Database for MySQL 리소스 연결보안 화면의 방화벽 규칙에 추가하면 된다.
 ![](/files/blog/2020-11-03/appsvcoutbound.png)
 ![](/files/blog/2020-11-03/dbfirewall2.png)
+
+그리고 DB 연결 문자열을 설정하자. 리모트 저장소(여기서는 Azure Repos)에는 연결 문자열 같은 암호나 인증키 등이 포함된 데이터를 커밋하면 안 되므로, 앞서 `appsettings.json` 에 분리한 연결 문자열이 있는 `DatabaseConnection` 의 값을 지워서 비워두고. 이 값을 App Service 리소스의 구성으로 옮길 것이다. 아래 그림처럼 App Service 리소스의 `구성 -> 연결 문자열 -> 새 연결 문자열`로 들어간다.
+여기에 이름은 `DatabaseConnection` 앞서 `appsettings.json` 에 있던 연결 문자열 값에 대한 Key 이다. App Service 의 경우 .Net 앱 배포시 연결 문자열로 `appsettings.json`의 `ConnectionStrings` 아래에 있는 키로 설정하면, [App Service 에서 설정한 값이 `appsettings.json` 에 정의한 값을 덮어쓰게 된다.](https://docs.microsoft.com/ko-kr/azure/app-service/configure-common#configure-connection-strings)
+![](/files/blog/2020-11-03/connstring.png)
+
+필요한 준비를 다 했으니, 이번에는 Azure Repos 에서 자동으로 배포되도록 설정하자. App Service 화면에서 `배포 센터`로 들어가면 다양한 방식의 배포 옵션을 확인할 수 있다. Azure Repos 뿐만 아니라, 많이 사용하는 GitHub와 Bitbucket 저장소와 연동해서 배포도 가능하며. 로컬 Git 저장소에서 푸시하여 배포하는 방법도 지원한다. 여기서 Azure Repos를 선택하자.
+
+![](/files/blog/2020-11-03/deploycenter.png)
+
+빌드 공급자는 Azure Pipelines 를 선택하자. Azure Pipelines 는 Azure DevOps 에 통합되어 있어서, 각 Azure DevOps 프로젝트에서 파이프라인 작업 현황을 확인할 수 있다. 나중에 필요하면 파이프라인을 수정해서 단위 테스트를 자동화 하거나, 정적 분석 등의 과정을 추가할 수 있다.
+
+![](/files/blog/2020-11-03/buildsrc.png)
+
+커밋이 올라오면 자동을 배포할 저장소와 저장소의 브랜치(분기) 를 설정해 준다. 그리고 설정을 마무리 하면, 자동으로 배포 파이프라인 구축되어 작동하기 시작한다.
+
+![](/files/blog/2020-11-03/buildcfg.png)
+
+Azure DevOps 에서 배포 설정한 프로젝트의 Pipelines 로 이동하면, 방금 앞에서 배포 설정으로 구성된 파이프라인이 작동하고 있는것을 확인할 수 있다.
+
+![](/files/blog/2020-11-03/azpipeline.png)
