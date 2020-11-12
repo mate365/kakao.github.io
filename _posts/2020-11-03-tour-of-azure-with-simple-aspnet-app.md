@@ -852,3 +852,11 @@ public class AuthController : ControllerBase
 회원 가입이 성공이면, 계정 이메일을 인증하는 메일을 발송해야 한다. ASP.NET Identity 가 메일 발송에 필요한 인증 토큰 정도는 생성해 주지만, 메일까지 전송해 주지는 않는다.
 그래서 메일 전송 모듈도 하나 따로 붙여줘야 한다. 그리고 메일 발송서비스도 하나 필요하다. 여기서는 SendGrid와 FluentEmail로 이를 구성해 보겠다.
 먼저 Azure 제공 서비스는 아니지만, Azure 에서 SendGrid 계정 생성이 가능하다. [Azure Marketplace 에서 SendGrid 계정을 생성하자.](https://sendgrid.com/docs/for-developers/partners/microsoft-azure/)
+마찬가지로 Azure Portal 통합 검색창에 *SendGrid* 검색하면 바로 나온다. 들어가서 계정 하나 생성하자. 사진처럼 가입 폼이 나오는데, 적절히 입력해 주면 된다.
+무료 요금제는 월 25000건이라는 많은 사용량을 제공하긴 하지만, 메일 발송 전용 IP를 제공하지는 않는다. SendGrid 의 공유IP 로 메일을 발송한다.
+중요한 내용의 메일을 꼭 수신자가 수신해야 하는 경우, 유료 요금제 중 전용 IP를 할당해 주는 요금제를 사용하는 것이 좋다.
+공유IP 의 경우 다른 사용자 메일 발송에도 사용되고. 수신자의 메일 서버가 해당 IP로부터 마케팅 메일이나 스팸메일을 수신했고, 이를 수신하고 싶지 않아 해당 IP를 차단한 경우도 있을 수 있기 때문이다.
+물론 SendGrid 의 경우 스팸 메일 발송하는 사용자는 차단 하겠지만. 정말 중요한 메일의 경우 전용 IP 받아서 전송하는 것이 좋다.
+SendGrid 의 경우 전용 IP에 대한 전송 신뢰도 까지 관리해 준다.
+
+![](/files/blog/2020-11-03/newsendgrid.png)
