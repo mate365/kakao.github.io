@@ -758,3 +758,97 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
   app.UseAuthorization();
   ...
 }
+```
+
+기존 `DatabaseContext.cs` 를 수정하여 ASP.NET Identity 와 연동하자. 기존 `DbContext`를상속 하던 클래스를 `IdentityDbContext`를 상속하도록 수정한다.
+```cs
+// 기존
+namespace IO.Swagger.Models
+{
+    public partial class DatabaseContext : DbContext
+    {
+      ...
+    }
+}
+// 수정
+namespace IO.Swagger.Models
+{
+    public partial class DatabaseContext : IdentityDbContext
+    {
+      ...
+    }
+}
+```
+
+기본적인 설정은 되었고, 이제 회원가입, 로그인, 로그아웃, 계정 복구 등 각종 인증 관련 API 를 구현해 보자. 인증을 위한 컨트롤러를 구현해서 작업할 것이다.
+먼저 아래 코드 처럼, 로그인 관리에 필요한 `SignInManager`, 사용자 관리에 필요한 `UserManager` 를 종속성 주입으로 주입받는다.
+```cs
+namespace IO.Swagger.Controllers
+{
+
+    [ApiController]
+    [Route("Auth")]
+    public class AuthController : ControllerBase
+    {
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly ILogger<AuthController> _logger;
+
+        public AuthController(SignInManager<IdentityUser> signInManager,
+           ILogger<AuthController> logger,
+            UserManager<IdentityUser> userManager)
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _logger = logger;
+        }
+    }
+}
+```
+
+이제 API 함수 하나 만들고, 필요한 데이터를 URL 파라메터나 요청 Body 로 받아서 `SignInManager`의 메소드나 `UserManager`의 메소드를 호출해 주면 된다. 
+회원 가입 API 를 예제로 코드를 작성해 보자. 우선 회원가입 데이터 양식을 DTO 코드로 만들어 정의하자. [`DataAnnotation` 특성을 이용하여 유효성 검사를 할 수 있다.](https://docs.microsoft.com/ko-kr/dotnet/api/system.componentmodel.dataannotations?view=net-5.0)
+```cs
+namespace IO.Swagger.Models.Dto
+{
+    public class SignUpDto
+    {
+        [Required]
+        public string Username { get; set; }
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        public string Password { get; set; }
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        public string PasswordConfirm { get; set; }
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+    }
+}
+```
+그리고 이러한 형태의 데이터를 받아 처리하는 API 를 구현하자. 회원가입은 [`UserManager`의 `CreateAsync()`를 호출하면 된다.](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.createasync?view=aspnetcore-5.0#definition) 그리고 해당 메소드가 반환한 객체의 `Succeeded` 값이 `true` 인지 확인하여 성공 여부를 확인한다.
+```cs
+...
+public class AuthController : ControllerBase
+{
+  ...
+  [HttpPost("signup")]
+  public async Task<IActionResult> SignUp(SignUpDto signUpForm)
+  {
+      var user = new IdentityUser { UserName = signUpForm.Username, Email = signUpForm.Email };
+      var result = await _userManager.CreateAsync(user, signUpForm.Password);
+      if (result.Succeeded)
+      {
+          return Ok();
+      }
+      return BadRequest();
+  }
+  ...
+}
+...
+```
+
+회원 가입이 성공이면, 계정 이메일을 인증하는 메일을 발송해야 한다. ASP.NET Identity 가 메일 발송에 필요한 인증 토큰 정도는 생성해 주지만, 메일까지 전송해 주지는 않는다.
+그래서 메일 전송 모듈도 하나 따로 붙여줘야 한다. 그리고 메일 발송서비스도 하나 필요하다. 여기서는 SendGrid와 FluentEmail로 이를 구성해 보겠다.
+먼저 Azure 제공 서비스는 아니지만, Azure 에서 SendGrid 계정 생성이 가능하다. [Azure Marketplace 에서 SendGrid 계정을 생성하자.](https://sendgrid.com/docs/for-developers/partners/microsoft-azure/)
