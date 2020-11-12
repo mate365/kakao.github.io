@@ -571,7 +571,7 @@ namespace IO.Swagger.Models
 public void ConfigureServices(IServiceCollection services)
 {
     ... 
-    services.AddDbContext<ApplicationDbContext>(options =>
+    services.AddDbContext<DatabaseContext>(options =>
          options.UseMySql(
              Configuration.GetConnectionString("DatabaseContext"),
              mySqlOptions => mySqlOptions
@@ -665,3 +665,96 @@ Azure DevOps 에서 배포 설정한 프로젝트의 Pipelines 로 이동하면,
 
 파이프라인 항목으로 들어가서, 수정 화면으로 들어가 보자. 요즘 많은 사람들이 사용하는 GitHub Actions 이 YAML 파일 편집 화면을 보여주는 것과 다르게 GUI 편집 화면이 나오는 데, 이는 클래식 인터페이스로 파이프라인을 구성하는 방식이다. [Azure Pipelines 의 경우 사진처럼 블럭을 끌어나 배치해서 파이프라인을 구성하는 클래식 인터페이스를 사용하는 방법이 있고, GitHub Actions나 기존에 많이 사용하던 Travis CI 처럼 YAML파일로 작성하여 구성하는 두가지 방법이 있다.](https://docs.microsoft.com/ko-kr/azure/devops/pipelines/get-started/pipelines-get-started?view=azure-devops)
 ![](/files/blog/2020-11-03/editpipeline.png)
+
+이제 배포도 다 완료 하였으니, 실제 작동하는 것을 확인하자. 앞에서 Swashbuckle을 연동한 것을 기억하는가? API 문서 자동 생성 연동과 그 문서를 볼 URL 까지 설정했기 때문에 바로 볼 수 있다. 
+`내_웹사이트_주소/swagger` 로 들어가서 확인해 보자. App Service 로 배포한 앱의 웹 주소는 App Service 리소스 개요 화면에서 확인 가능하다. 예를 들어 `testapi.azurewebsites.net` 면 `testapi.azurewebsites.net/swagger`로 들어가자. Swagger UI 로 생성된 API 문서를 확인할 수 있다.
+![](/files/blog/2020-11-03/swagger.png)
+
+각 API 항목의 `Try it out` 버튼으로 바로 API 테스트 해보는 것도 가능하다.
+
+![](/files/blog/2020-11-03/swaggeritem.png)
+
+# 인증기능 구현하기
+이제 여기까지 했으면 다 했다 싶지만... 그게 아니였다. 고객사에서 전달받은 수정된 서비스 사용 시나리오 문서를 보면서 이상한 점이 몇가지 더 있었는데, 
+그 중 하나가 기본적인 인증 기능(가입, 로그인, 로그아웃, 계정 복구)에 대한 설명이 없는 것이였다. 그래서 중간에 컨퍼런스 콜을 통해 이 점을 문의했다. 
+회원 데이터가 이미 DB에 저장되어 있다고 가정하고 인증 기능을 넣지 말아야 하는지, 아니면 인증 기능까지 추가로 구현해야 하는지. 
+그 결과는... 고객서에서 인증 기능까지 구현해 달라고 한다. (역시 쉽게 끝날리가 없지...)
+
+인증 기능도 직접 다 구현하기 보단, 빠르게 기능을 넣기 위해 이미 존재하는 모듈을 활용하려 했는데, 그러기 위해 [ASP.NET Identity](https://docs.microsoft.com/ko-kr/aspnet/core/security/authentication/identity?view=aspnetcore-5.0&tabs=visual-studio)를 검토했다. ASP.NET Identity 는 기본적인 쿠키 기반 인증 뿐만 아니라, IdentityServer4 기반 OpenID 인증, Azure AD 기반 인증, Azure AD B2C 기반의 소셜 미디어 계정(Facebook, Twitter 등) 인증, App Service 간편 인증 등. 정말 다양한 옵션을 제공한다. 여기서는 사용자 정보를 EF Core 를 통해 저장하는 방식의 기본적인 쿠키 기반 인증만 간단히 다뤄보겠다.
+
+앞에서 작업하던 프로젝트에 몇가지 패키지를 추가하자.
+```bash 
+dotnet add package Microsoft.AspNetCore.Identity
+dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore
+```
+
+`Statup.cs` 에서 종속성 주입으로 몇가지 설정을 해야 한다. 먼저 `ConfigureServices()` 에 [`AddDefaultIdentity()` 메소드를 호출하여 쿠키 기반 인증 서비스를 설정한다.](https://docs.microsoft.com/ko-kr/dotnet/api/microsoft.extensions.dependencyinjection.identityservicecollectionuiextensions.adddefaultidentity?view=aspnetcore-5.0#definition) 
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+    ...
+    services.AddDefaultIdentity<IdentityUser>()
+        .AddEntityFrameworkStores<DatabaseContext>(); // 앞서 만들어 둔 DbContext 연동
+    ...
+}
+```
+
+추가로 각종 인증 정책(암호 정책, 계정 잠금 정책, 사용자 정책 등)을 아래와 같이 설정할 수 있다.  [이 문서](https://docs.microsoft.com/ko-kr/dotnet/api/microsoft.aspnetcore.identity.identityoptions?view=aspnetcore-5.0) 를 참고해서 원하는 인증 정책을 찾아 설정할 수 있다.
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+    ...
+    services.AddDefaultIdentity<IdentityUser>()
+        .AddEntityFrameworkStores<DatabaseContext>(); // 앞서 만들어 둔 DbContext 연동
+    ...
+    services.Configure<IdentityOptions>(options =>
+    {
+        // Password settings.
+        options.Password.RequireDigit = true;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireNonAlphanumeric = true;
+        options.Password.RequireUppercase = true;
+        options.Password.RequiredLength = 6;
+        options.Password.RequiredUniqueChars = 1;
+
+        // Lockout settings.
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+        options.Lockout.MaxFailedAccessAttempts = 5;
+        options.Lockout.AllowedForNewUsers = true;
+
+        // User settings.
+        options.User.AllowedUserNameCharacters =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+        options.User.RequireUniqueEmail = false;
+    });
+    ...
+}
+```
+쿠키 기반 인증이니, 쿠키 보안 정책도 설정해 주자. 쿠키 인증 정책 옵션은 [이 문서](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.cookieauthenticationoptions?view=aspnetcore-1.1) 를 참고하면 된다.
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+    ...
+    services.ConfigureApplicationCookie(options =>
+    {
+        // Cookie settings
+        options.Cookie.HttpOnly = true; // 클라이언트 측 JS 에서 쿠키 접근 불허 여부
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(5); // 쿠키 유효 시간 설정
+
+        // options.LoginPath = "/Identity/Account/Login"; // 401 오류시 리다이렉트할 경로
+        // options.AccessDeniedPath = "/Identity/Account/AccessDenied"; // 403 오류시 리다이렉트할 경로
+        options.SlidingExpiration = true; // 쿠키 자동 갱신 설정
+    });
+    ...
+}
+```
+
+이번에는 `Configure()` 메소드에 `UseAuthentication()`과 `UseAuthorization()`를 호출해서 인증(Authentication) 및 허가(Authorization) 미들웨어를 설정해 준다.
+```cs
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+  ...
+  app.UseAuthentication();
+  app.UseAuthorization();
+  ...
+}
