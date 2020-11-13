@@ -848,15 +848,37 @@ public class AuthController : ControllerBase
 }
 ...
 ```
+# 이메일 발송
 
 회원 가입이 성공이면, 계정 이메일을 인증하는 메일을 발송해야 한다. ASP.NET Identity 가 메일 발송에 필요한 인증 토큰 정도는 생성해 주지만, 메일까지 전송해 주지는 않는다.
 그래서 메일 전송 모듈도 하나 따로 붙여줘야 한다. 그리고 메일 발송서비스도 하나 필요하다. 여기서는 SendGrid와 FluentEmail로 이를 구성해 보겠다.
-먼저 Azure 제공 서비스는 아니지만, Azure 에서 SendGrid 계정 생성이 가능하다. [Azure Marketplace 에서 SendGrid 계정을 생성하자.](https://sendgrid.com/docs/for-developers/partners/microsoft-azure/)
-마찬가지로 Azure Portal 통합 검색창에 *SendGrid* 검색하면 바로 나온다. 들어가서 계정 하나 생성하자. 사진처럼 가입 폼이 나오는데, 적절히 입력해 주면 된다.
-무료 요금제는 월 25000건이라는 많은 사용량을 제공하긴 하지만, 메일 발송 전용 IP를 제공하지는 않는다. SendGrid 의 공유IP 로 메일을 발송한다.
+SendGrid는 Azure 제공 서비스는 아니지만, [Azure Marketplace 에서 SendGrid 계정을 생성하여 Azure 리소스로 관리가 가능하다.](https://sendgrid.com/docs/for-developers/partners/microsoft-azure/)
+SendGrid 계정을 생성하려면, 다른 리소스와 마찬가지로 Azure Portal 통합 검색창에 *SendGrid* 검색하면 바로 나온다. 들어가서 계정 하나 생성하자. 사진처럼 가입 폼이 나오는데, 적절히 입력해 주면 된다.
+무료 요금제는 월 25000건이라는 많은 사용량을 제공하긴 하지만, 메일 발송 전용 IP를 제공하지는 않는다. 무료 요금제의 공유IP 로 메일을 발송한다.
+
 중요한 내용의 메일을 꼭 수신자가 수신해야 하는 경우, 유료 요금제 중 전용 IP를 할당해 주는 요금제를 사용하는 것이 좋다.
-공유IP 의 경우 다른 사용자 메일 발송에도 사용되고. 수신자의 메일 서버가 해당 IP로부터 마케팅 메일이나 스팸메일을 수신했고, 이를 수신하고 싶지 않아 해당 IP를 차단한 경우도 있을 수 있기 때문이다.
-물론 SendGrid 의 경우 스팸 메일 발송하는 사용자는 차단 하겠지만. 정말 중요한 메일의 경우 전용 IP 받아서 전송하는 것이 좋다.
-SendGrid 의 경우 전용 IP에 대한 전송 신뢰도 까지 관리해 준다.
+공유 IP 는 이름 그대로 나만 전송에 사용하는 것이 아니라, 다른 사용자도 메일 발송에 사용하기 때문이다. 물론 SendGrid 의 경우 스팸 전송을 사전에 차단 하겠지만,
+만약 다른 사용자가 해당 공유 IP 로 스팸메일을 대량 발송해서 IP주소에 대한 평판(Reputation)이 떨어졌다면, 이메일 서비스 제공자의 메일 서버가 해당 IP 주소를 차단할 수도 있기 때문이다.
+메일 서버에서 IP를 차단 하면, 수신자의 스팸함에조차 들어가지 못하기 때문에, 수신자는 발신자가 메일 발송했다는 사실 조차 모른다.
+그래서 정말 중요한 메일을 전송 하는 경우, 특히 마케팅 메일 등 다른 목적의 메일도 전송하는 경우, 전용 IP를 제공하는 요금제를 선택하여 용도에 따라 전용 IP 를 두고 사용하는 것이 좋다.
+보통 메일 발송 에이전트를 직접 구축해 관리하면 메일 발송 수를 서서히 늘려가던가 하는 방식으로 IP주소 평판을 직접 관리해야 하지만, SendGrid 의 경우 이를 대신 관리해 주기 때문에 편리하다.
 
 ![](/files/blog/2020-11-03/newsendgrid.png)
+
+계정을 만들었다면, 해당 SendGrid Account 리소스 화면의 `Manage` 버튼을 누르면 로그인 된 SendGrid 관리 화면이 나온다. 
+먼저 Sender Identity 인증 및 등록을 통해 메일 발송에 사용할 도메인과 주소를 등록해야 한다. Domain Authentication 으로 도메인 인증을 하고, Single Sender Verification 으로 전송에 사용할 이메일 주소를 만들고 발송자 정보를 인증한다. Sender Authentication 화면은 Settings -> Sender Authentication 에 있다.
+
+![](/files/blog/2020-11-03/senderauth.png)
+
+먼저 `Authehnticate Your Domain` 을 클릭하여, 도메인 등록과 인증을 먼저 진행하자. 아래 사진과 같은 화면이 나오는데, 본인이 사용하는 DNS 제공자를 선택하자. 본인이 사용하는 DNS 제공자가 없다면 `Other Host`를 선택 후 진행한다.
+![](/files/blog/2020-11-03/choosedns.png)
+
+사용할 최상위 도메인(TLD)를 입력한다.
+
+![](/files/blog/2020-11-03/enterdomain.png)
+
+다음 화면에서는 DNS 에 입력해야 할 레코드 정보가 나온다. 나와있는 데로 DNS 레코드를 등록하면 된다. 아래 사진의 경우 CNAME 레코드 3개를 등록하면 된다.
+![](/files/blog/2020-11-03/regkeys.png)
+> SendGrid 에서 보여주는 등록 DNS 레코드 정보
+![](/files/blog/2020-11-03/dnssetup.png)
+> Netlify DNS 에 레코드 등록한 모습
