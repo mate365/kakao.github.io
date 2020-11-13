@@ -994,3 +994,40 @@ public async Task<IActionResult> SignUp(SignUpDto signUpForm)
   - [`ConfirmEmailAsync()`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.confirmemailasync?view=aspnetcore-5.0) 토큰 제출하여 이메일 인증 처리
   - [`GeneratePasswordResetTokenAsync()`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.generatepasswordresettokenasync?view=aspnetcore-5.0) 암호 복구 토큰 발급
   - [`ResetPasswordAsync()`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.resetpasswordasync?view=aspnetcore-5.0) 암호 복구(토큰과 새 암호 제출)
+
+이제 배포하기 앞서, 사용자 정보도 DB 에 저장되니 DB 테이블 업데이트가 필요하다. 아까는 DB 서버의 테이블에서 코드를 생성했다면 이번엔 반대로, 코드에서 마이그레이션 코드 생성 후 이를 이용해 테이블을 업데이트 해 줘야 한다. `dotnet ef` 명령을 이용하여 이를 진행하면 된다. 먼저 테이블 업데이트 할 마이크레이션 코드를 생성한다.
+
+```bash
+dotnet ef migrations add UserData
+```
+`appsettings.json` 에 DB 연결 문자열을 설정한 다음, 아래 명령으로 테이블 업데이트를 진행한다.
+```bash
+dotnet ef database update
+```
+인증 기능이 포함된 버전을 배포하기 전, 앞에서 DB 연결 문자열을 App Service 구성으로 옮긴 것 처럼, SMTP 설정값도 App Service 구성으로 옮기자.
+앞서 `appsettings.json` 에서 아래와 같이 설정했다. `Smtp` 아래에 여러 값이 묶여있는 구조인데, `Parent:Child` 형태로 이름을 넣어서 옮겨주면 된다.
+그러면 앞에서 App Service  구성에 설정된 연결 문자열이 실행 시 덮어쓰는 것 처럼, 아래 설정값도 실행 시점에 App Service 구성에 설정된 값으로 덮어씌어진다.
+```json
+{
+  ...
+  "Smtp": {
+    "Host": "smtp.sendgrid.net",
+    "Port": 465,
+    "User": "apikey",
+    "Pass": "<API_KEY>",
+    "SenderAddr": "noreply@youngbin.xyz"
+  }
+}
+
+```
+
+| 이름 | 값 |
+| -- | -- |
+| Smtp:Host | smtp.sendgrid.net |
+| Smtp:Port | 465 |
+| Smtp:User | apikey |
+| Smtp:Pass | SendGrid 에서 발급한 API Key |
+| Smtp:SenderAddr | noreply@youngbin.xyz |
+
+# API Management
+이제 거의 다 왔다.
