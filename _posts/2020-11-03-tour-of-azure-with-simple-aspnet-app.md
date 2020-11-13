@@ -851,7 +851,7 @@ public class AuthController : ControllerBase
 # 이메일 발송
 
 회원 가입이 성공이면, 계정 이메일을 인증하는 메일을 발송해야 한다. ASP.NET Identity 가 메일 발송에 필요한 인증 토큰 정도는 생성해 주지만, 메일까지 전송해 주지는 않는다.
-그래서 메일 전송 모듈도 하나 따로 붙여줘야 한다. 그리고 메일 발송서비스도 하나 필요하다. 여기서는 SendGrid와 FluentEmail로 이를 구성해 보겠다.
+그래서 메일 전송 모듈도 하나 따로 붙여줘야 한다. 그리고 메일 발송서비스도 하나 필요하다. 여기서는 SendGrid와 [FluentEmail](https://github.com/lukencode/FluentEmail)로 이를 구성해 보겠다.
 SendGrid는 Azure 제공 서비스는 아니지만, [Azure Marketplace 에서 SendGrid 계정을 생성하여 Azure 리소스로 관리가 가능하다.](https://sendgrid.com/docs/for-developers/partners/microsoft-azure/)
 SendGrid 계정을 생성하려면, 다른 리소스와 마찬가지로 Azure Portal 통합 검색창에 *SendGrid* 검색하면 바로 나온다. 들어가서 계정 하나 생성하자. 사진처럼 가입 폼이 나오는데, 적절히 입력해 주면 된다.
 무료 요금제는 월 25000건이라는 많은 사용량을 제공하긴 하지만, 메일 발송 전용 IP를 제공하지는 않는다. 무료 요금제의 공유IP 로 메일을 발송한다.
@@ -877,8 +877,60 @@ SendGrid 계정을 생성하려면, 다른 리소스와 마찬가지로 Azure Po
 
 ![](/files/blog/2020-11-03/enterdomain.png)
 
-다음 화면에서는 DNS 에 입력해야 할 레코드 정보가 나온다. 나와있는 데로 DNS 레코드를 등록하면 된다. 아래 사진의 경우 CNAME 레코드 3개를 등록하면 된다.
+다음 화면에서는 DNS 에 입력해야 할 레코드 정보가 나온다. 나와있는 데로 DNS 레코드를 등록하면 된다. 아래 사진의 경우 CNAME 레코드 3개를 등록하면 된다. 등록 후 `Verify` 를 클릭하여 인증을 진행한다.
 ![](/files/blog/2020-11-03/regkeys.png)
 > SendGrid 에서 보여주는 등록 DNS 레코드 정보
+
 ![](/files/blog/2020-11-03/dnssetup.png)
 > Netlify DNS 에 레코드 등록한 모습
+
+다음으로, `Verify a Single Sender` 를 눌러 발송자 정보를 등록한다. 아래와 같은 화면이 나오는데, 발송에 사용할 메일 주소(앞서 등록한 도메인 사용하는 주소)와 발송자 신원 정보 그리고 여기에서 정하는 메일 주소(From Email Address)는 *발신 전용* 주소이기 때문에, 회신 받을 메일 주소(Reply To)도 따로 입력해 준다. [발송자 평판 유지를 위한 절차 중 하나이다.](https://sendgrid.com/docs/ui/sending-email/sender-verification/)
+
+![](/files/blog/2020-11-03/senderverify.png)
+
+이제 등록과 인증을 마쳤으니, 연동을 해 보자. 대부분의 이메일 발송 서비스가 자체적으로 API 나 SDK 를 제공한다. 이를 사용하는 것도 좋지만, 여기서는 FluentEmail의 SMTP 모듈로 SendGrid 와 연동해 보겠다. API, SDK 는 서비스마다 차이가 조금씩 있겠지만. SMTP 는 프로토콜이니 나중에 필요에 의해 다른 서비스로 옮길때 설정만 조금 수정하면 끝이기 때문이다. 
+Email API 아래 Integration Guide 로 이동하여, `SMTP Relay` 를 선택하자.
+
+![](/files/blog/2020-11-03/integrate.png)
+
+API Key 이름을 정해서 입력하고 `Create Key` 를 클릭하여 키를 생성하자. 다음 단계에서 SMTP 프로토콜로 SendGrid 메일 발송시 사용된다. 
+그리고 아래 서버 호스트네임과 포트, 사용자명 등 인증정보를 확인한다.
+
+![](/files/blog/2020-11-03/smtpkey.png)
+
+이제 다시 작업하던 .Net 프로젝트로 돌아와서, FluentEmail 패키지를 추가한다. 코어 패키지, SMTP 패키지를 설치했다. 메일 본문을 템플릿 렌더링 하고 싶다면, Razor 패키지를 선택적으로 설치하면 된다.
+```bash
+dotnet add package FluentEmail.Core
+dotnet add package FluentEmail.Smtp
+# dotnet add package FluentEmail.Razor
+```
+
+역시나 `Statup.cs` 의 `ConfigureServices()` 에서 종속성 주입으로 FluentEmail 을 설정해 주자.
+DB 연결 문자열 설정할 때 처럼, `appsettings.json` 에 값을 넣고 불러와서 설정해 주도록 하자.
+```json
+{
+  ...
+  "Smtp": {
+    "Host": "smtp.sendgrid.net",
+    "Port": 465,
+    "User": "apikey",
+    "Pass": "<API_KEY>",
+    "SenderAddr": "noreply@youngbin.xyz"
+  }
+}
+
+```
+```cs
+...
+public void ConfigureServices(IServiceCollection services)
+{
+  services.AddFluentEmail(Configuration["Smtp:SenderAddr"]) // 발신자 주소 설정
+    .AddRazorRenderer() // 템플릿 렌더링 사용할 경우만 사용
+    .AddSmtpSender( // SMTP 서버 설정
+      Configuration["Smtp:Host"],
+      int.Parse(Configuration["Smtp:Port"]),
+      Configuration["Smtp:User"],
+      Configuration["Smtp:Pass"]);
+}
+...
+```
