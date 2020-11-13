@@ -1006,7 +1006,7 @@ dotnet ef database update
 ```
 인증 기능이 포함된 버전을 배포하기 전, 앞에서 DB 연결 문자열을 App Service 구성으로 옮긴 것 처럼, SMTP 설정값도 App Service 구성으로 옮기자.
 앞서 `appsettings.json` 에서 아래와 같이 설정했다. `Smtp` 아래에 여러 값이 묶여있는 구조인데, `Parent:Child` 형태로 이름을 넣어서 옮겨주면 된다.
-그러면 앞에서 App Service  구성에 설정된 연결 문자열이 실행 시 덮어쓰는 것 처럼, 아래 설정값도 실행 시점에 App Service 구성에 설정된 값으로 덮어씌어진다.
+그러면 앞에서 App Service 구성에 설정된 연결 문자열이 실행 시 덮어쓰는 것 처럼, [아래 설정값도 실행 시점에 App Service 구성에 설정된 값으로 덮어씌어진다.](https://docs.microsoft.com/ko-kr/azure/app-service/configure-common)
 ```json
 {
   ...
@@ -1030,4 +1030,13 @@ dotnet ef database update
 | Smtp:SenderAddr | noreply@youngbin.xyz |
 
 # API Management
-이제 거의 다 왔다.
+이제 거의 다 왔다. 마지막으로 App Service 를 [API Management](https://docs.microsoft.com/ko-kr/azure/api-management/api-management-key-concepts) 와 연동해 보겠다.
+Azure API Management 는 API Gateway, API 관리 포탈, 개발자(API 사용자) 포탈을 통합한 제품이다. API 통합을 하거나, API 호출 건수 등으로 과금을 하는 API 상품을 만들 수도 있고, 백엔드 수정 없이 동작을 따로 정의해 적용하여 프로토타이핑도 가능하다. 일단 당연히 API Management 리소스를 하나 생성해야 하는데, 생성 완료까지 **30분** 넘게 걸린다. 리소스 배포하는 30분 동안 커피 한 잔 떠다가 마시면서 느긋하게 기다리도록 하자. 리소스 생성은 아래 그림을 참고해서 생성하면 된다. 참고로 개발자 요금제는 SLA 가 없다. 서비스 장애에 대해 보상이 없다는 의미이다. 프로덕션에 사용할 경우 SLA 보장 요금제를 선택하여 리소스를 생성하도록 하자. 요금제 잘못 선택해서 삭제하고 다시 만들면 30분 또 기다려야 한다.
+
+![](/files/blog/2020-11-03/newapim.png)
+
+긴 시간 기다려서 드디어 API Management 인스턴스가 생성 되었다면, 해당 리소스 화면의 `API` 화면으로 가서 바로 앞에서 배포한 App Service 리소스를 연결하자.
+![](/files/blog/2020-11-03/apimconnect.png)
+![](/files/blog/2020-11-03/apimappsvc.png)
+
+ 필요한 경우, URL 접미사를 붙여 Base URL 에 경로를 추가하여 구분하도록 설정이 가능하다.
