@@ -934,3 +934,63 @@ public void ConfigureServices(IServiceCollection services)
 }
 ...
 ```
+
+앞에서 구현한 회원가입 API 에 이메일 인증 메일 발송 코드를 추가해 보자. 우선 컨트롤러 클래스에 FluentEmail 객체를 주입받아 저장하고.
+```cs
+public class AuthController : ControllerBase
+{
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly ILogger<AuthController> _logger;
+    private readonly IFluentEmail _email; // FluentEmail 주입받아 저장할 변수
+    public AuthController(SignInManager<IdentityUser> signInManager,
+       ILogger<AuthController> logger,
+        UserManager<IdentityUser> userManager,
+        IFluentEmail email) // FluentEmail 주입받기
+    {
+        _userManager = userManager;
+        _signInManager = signInManager;
+        _logger = logger;
+        _email = email; // 주입 받은것 저장
+    }
+    ...
+}
+```
+그리고 인증 토큰을 발급하여, 가입한 사람의 이메일로 전송하는 코드를 추가하자. 가입 성공시에만 전송해야 하니, `result.Succeeded` 가 `true` 일때 메일 발송하도록 하면 된다.
+이메일 인증 토큰 발급은 `UserManager`의 [`GenerateEmailConfirmationTokenAsync()`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.generateemailconfirmationtokenasync?view=aspnetcore-5.0#Microsoft_AspNetCore_Identity_UserManager_1_GenerateEmailConfirmationTokenAsync__0_) 메소드를 호출하여 생성한다.
+```cs
+...
+[HttpPost("signup")]
+public async Task<IActionResult> SignUp(SignUpDto signUpForm)
+{
+    var user = new IdentityUser { UserName = signUpForm.Username, Email = signUpForm.Email };
+    var result = await _userManager.CreateAsync(user, signUpForm.Password);
+    if (result.Succeeded)
+    {
+        // 사용자에 대한 이메일 인증 토큰 발급
+        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        // 인증 URL 빌드
+        var activateUrl = $"auth/activate/{user.Id}/{code}";
+        // 이메일 발송
+        await _email
+            .To(signUpForm.Email) // 수신자
+            .Subject("Verify your account") // 제목
+            .Body($"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(activateUrl)}'>clicking here</a>.") // 내용
+            .SendAsync(); // 발송
+        return Ok();
+    }
+    return BadRequest();
+}
+...
+```
+위와 유사한 방식으로, 적절한 메소드를 호출하여 로그인, 로그아웃, 비밀번호 복구 등을 구현할 수 있다. 이에 사용할 메소드를 조금 나열하자면 아래와 같다.
+
+- [SignInManager](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.signinmanager-1?view=aspnetcore-5.0)
+  - [`PasswordSignInAsync()`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.signinmanager-1.passwordsigninasync?view=aspnetcore-5.0) 암호로 로그인
+  - [`SignOutAsync()`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.signinmanager-1.signoutasync?view=aspnetcore-5.0) 로그아웃
+- [UserManager](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1?view=aspnetcore-5.0)
+  - [`GenerateEmailConfirmationTokenAsync()`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.generateemailconfirmationtokenasync?view=aspnetcore-5.0) 신규회원 이메일 인증토큰 발급
+  - [`ConfirmEmailAsync()`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.confirmemailasync?view=aspnetcore-5.0) 토큰 제출하여 이메일 인증 처리
+  - [`GeneratePasswordResetTokenAsync()`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.generatepasswordresettokenasync?view=aspnetcore-5.0) 암호 복구 토큰 발급
+  - [`ResetPasswordAsync()`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.resetpasswordasync?view=aspnetcore-5.0) 암호 복구(토큰과 새 암호 제출)
