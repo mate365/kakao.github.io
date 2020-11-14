@@ -1053,3 +1053,15 @@ Settings 탭으로 가서, `Subscription required` 를 체크 해제 하고 저�
 
 모니터링 아래에 "분석" 화면으로 들어가면, API Management 에 연결된 여러 API 백엔드에 대한 API 호출 기록과 그 분석을 통합해서 볼 수 있다.
 ![](/files/blog/2020-11-03/apimlogs.png)
+통합 되어있는 API 백엔드 별로 통계를 볼 수도 있고, 모든 API 백엔드의 API 엔드포인트별로 보거나, 통합된 API 백엔드에서 발생한 API 호출 내역을 하나의 목록으로도 볼 수 있다.
+![](/files/blog/2020-11-03/apimlogcats.png)
+
+# Azure Front Door
+마지막으로, API Management 앞에 Front Door 를 붙여보고 마무리 하도록 하겠다. Azure Front Door 에 대한 소개는... 이번에는 Microsoft 문서에서 발췌해 보았다.
+
+> Azure Front Door는 Microsoft 글로벌 에지 네트워크를 사용하여 빠르고, 안전하고, 확장성이 뛰어난 웹 애플리케이션을 만들기 위한 확장 가능한 글로벌 진입점입니다. Front Door를 사용하면 글로벌 소비자 및 기업 애플리케이션을 글로벌 Azure 잠재 고객에게 도달하는 콘텐츠가 있는 견고한 고성능의 맞춤형 최신 애플리케이션으로 변환할 수 있습니다.
+> - [Azure Front Door 란?](https://docs.microsoft.com/ko-kr/azure/frontdoor/front-door-overview)
+
+문서를 좀 더 읽어보면서 이해한 것을 바탕으로 좀 쉽게 설명하자면, 전세계 어디서든 Azure 에 호스팅 한 웹 앱에 빠르게 접속 할 수 있도록 해 주는 제품 정도로 설명할 수 있다. 동일한 웹 앱이 여러 리전에 배포되어 있다면, 사용자를 그중 가장 빠르게 접속 가능한 쪽으로 라우팅 해 주는 것이 주요한 기능이고, 여기에 웹 애플리케이션 방화벽(WAF), DDoS 보호등 다양한 보안 기능까지 통합된 제품이다.
+
+
