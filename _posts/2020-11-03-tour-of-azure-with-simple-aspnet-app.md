@@ -627,7 +627,7 @@ namespace IO.Swagger.Controllers
 # 배포
 자. 이제 드디어 배포를 해 보자. 프로젝트 소스코드는 회사에서 Azure DevOps 를 사용해서, Azure DevOps 가 제공하는 Azure Repos 로 관리한다.
 그리고 배포에는 Azure App Service 를 사용하기로 했는데, 둘 다 Azure 서비스 여서 마우스 클릭 몇번으로 배포 연동이 가능하다.
-[Azure DevOps 에 대한 소개는 영진님의 글에 잘 나와있어서, 이걸 참고하면 좋고.](/2020/07/10/AzureDevopsOnAKS1) [Azure Repos 에 소스코드 커밋 올리는건 GitHub등 다른 플랫폼과 방법 유사하니 생략하겠다.](https://docs.microsoft.com/ko-kr/azure/devops/repos/git/create-new-repo)
+[Azure DevOps 에 대한 소개는 영진님의 글에 잘 나와있어서, 해당 글을 참고하면 좋다.](/2020/07/10/AzureDevopsOnAKS1) [Azure Repos 에 소스코드 커밋 올리는 방법은 해당 문서를 참고하도록 하자. GitHub등 다른 플랫폼과 방법 유사하다.](https://docs.microsoft.com/ko-kr/azure/devops/repos/git/create-new-repo)
 여기선 바로 Azure App Service 하나 생성하고, Azure Repos 에 소스코드가 올라와 있다고 가정하고 배포 연동을 해 보자.
 ![](/files/blog/2020-11-03/newappservice.png)
 
@@ -1030,7 +1030,7 @@ dotnet ef database update
 | Smtp:SenderAddr | noreply@youngbin.xyz |
 
 # API Management
-이제 거의 다 왔다. 마지막으로 App Service 를 [API Management](https://docs.microsoft.com/ko-kr/azure/api-management/api-management-key-concepts) 와 연동해 보겠다.
+이번에는 App Service 를 [API Management](https://docs.microsoft.com/ko-kr/azure/api-management/api-management-key-concepts) 와 연동해 보겠다.
 Azure API Management 는 API Gateway, API 관리 포탈, 개발자(API 사용자) 포탈을 통합한 제품이다. API 통합을 하거나, API 호출 건수 등으로 과금을 하는 API 상품을 만들 수도 있고, 백엔드 수정 없이 동작을 따로 정의해 적용하여 프로토타이핑도 가능하다. 일단 당연히 API Management 리소스를 하나 생성해야 하는데, 생성 완료까지 **30분** 넘게 걸린다. 리소스 배포하는 30분 동안 커피 한 잔 떠다가 마시면서 느긋하게 기다리도록 하자. 리소스 생성은 아래 그림을 참고해서 생성하면 된다. 참고로 개발자 요금제는 SLA 가 없다. 서비스 장애에 대해 보상이 없다는 의미이다. 프로덕션에 사용할 경우 SLA 보장 요금제를 선택하여 리소스를 생성하도록 하자. 요금제 잘못 선택해서 삭제하고 다시 만들면 30분 또 기다려야 한다.
 
 ![](/files/blog/2020-11-03/newapim.png)
@@ -1064,4 +1064,20 @@ Settings 탭으로 가서, `Subscription required` 를 체크 해제 하고 저�
 
 문서를 좀 더 읽어보면서 이해한 것을 바탕으로 좀 쉽게 설명하자면, 전세계 어디서든 Azure 에 호스팅 한 웹 앱에 빠르게 접속 할 수 있도록 해 주는 제품 정도로 설명할 수 있다. 동일한 웹 앱이 여러 리전에 배포되어 있다면, 사용자를 그중 가장 빠르게 접속 가능한 쪽으로 라우팅 해 주는 것이 주요한 기능이고, 여기에 웹 애플리케이션 방화벽(WAF), DDoS 보호등 다양한 보안 기능까지 통합된 제품이다.
 
+리소스 생성을 시작하면 Front Door 디자이너가 나온다. 프런트엔드/도메인 부터 백엔드 풀, 회람 규칙 까지 순서대로 설정하면 된다.
+![](/files/blog/2020-11-03/azurefddesign.png)
 
+프런트엔드/도메인 부분은 Front Door 의 호스트 이름(접속 주소)와 방화벽 정책 등을 설정한다. 방화벽은 정책이 미리 만들어져 있어야 설정 가능하니 지금 단계에서는 생략하고 진행한다.
+![](/files/blog/2020-11-03/azfdfront.png)
+
+백엔드 풀 에서는 Front Door 뒤에 붙을 백엔드를 설정한다. 하나 이상의 여러 백엔드를 연결하여 풀을 형성할 수 있다. 그러면 Front Door 에서 [Health probe](https://docs.microsoft.com/ko-kr/azure/frontdoor/front-door-health-probes)를 통해 최상의 백엔드 리소스를 결정하여 라우팅 한다.
+![](/files/blog/2020-11-03/azfdback.png)
+
+마지막으로 회람 규칙(라우팅 규칙)에서 라우팅 설정을 하고 리소스 생성을 마무리 한다.
+![](/files/blog/2020-11-03/azfdroute.png)
+
+Front Door에 설정할 WAF 정책을 생성하여 설정해 보자. Front Door 용 WAF 정책을 선택하고 계속한다.
+![](/files/blog/2020-11-03/azfdwaf.png)
+
+WAF 정책 생성 중 볼 수 있는 관리형 규칙 선택 화면이다. OWASP Top 10 에 정의된 웹 취약점에 대한 공격을 방어하는 방화벽 정책이 미리 준비되어 있어, 이를 그대로 사용할 수 있다.
+![](/files/blog/2020-11-03/azfdwafrules.png)
