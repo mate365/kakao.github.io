@@ -1039,4 +1039,17 @@ Azure API Management 는 API Gateway, API 관리 포탈, 개발자(API 사용자
 ![](/files/blog/2020-11-03/apimconnect.png)
 ![](/files/blog/2020-11-03/apimappsvc.png)
 
- 필요한 경우, URL 접미사를 붙여 Base URL 에 경로를 추가하여 구분하도록 설정이 가능하다.
+필요한 경우, URL 접미사를 붙여 Base URL 에 경로를 추가하여 구분하도록 설정이 가능하다.
+그렇게 해서 연결된 앱 서비스에 나오는 API 목록은 앞에서 구현한 백엔드의 API 와 다름을 할 수 있다. 
+Operations 탭의 All operations 를 누르고, `Frontend` 영역의 편집 버튼을 눌러 OpenAPI 명세 편집기를 열어 앞에서 구현한 백엔드의 명세로 교환하자
+ ![](/files/blog/2020-11-03/diffapi.png)
+
+앞서 배포한 App Service URL 에 `/swagger` 를 붙이고 들어가면  Swagger UI 가 나오는데, JSON 명세를 여는 링크가 페이지 상단에 있다. 이를 눌러 나오는 JSON 형식의 명세에서, `paths` 부분부터 나오는 내용을 복사해서 Azure 쪽에 있는 내용을 바꾸면 된다.
+![](/files/blog/2020-11-03/compareapi.png)
+
+Settings 탭으로 가서, `Subscription required` 를 체크 해제 하고 저장하도록 하자. 이 기능은 개발자 대상으로 Open API 구독 상품을 만들 때 사용하는 기능이여서,
+지금처럼 내부적으로만 사용할 API에 이 기능을 사용할 이유가 없다. Test 탭으로 이동하면, Swagger UI 에서 API 바로 실행해서 테스트 해 볼 수 있듯 여기서도 바로 테스트 해 볼 수 있다.
+![](/files/blog/2020-11-03/apimtest.png)
+
+모니터링 아래에 "분석" 화면으로 들어가면, API Management 에 연결된 여러 API 백엔드에 대한 API 호출 기록과 그 분석을 통합해서 볼 수 있다.
+![](/files/blog/2020-11-03/apimlogs.png)
