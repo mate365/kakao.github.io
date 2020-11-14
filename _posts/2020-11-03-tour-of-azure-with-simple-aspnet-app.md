@@ -1063,6 +1063,7 @@ Settings 탭으로 가서, `Subscription required` 를 체크 해제 하고 저�
 > - [Azure Front Door 란?](https://docs.microsoft.com/ko-kr/azure/frontdoor/front-door-overview)
 
 문서를 좀 더 읽어보면서 이해한 것을 바탕으로 좀 쉽게 설명하자면, 전세계 어디서든 Azure 에 호스팅 한 웹 앱에 빠르게 접속 할 수 있도록 해 주는 제품 정도로 설명할 수 있다. 동일한 웹 앱이 여러 리전에 배포되어 있다면, 사용자를 그중 가장 빠르게 접속 가능한 쪽으로 라우팅 해 주는 것이 주요한 기능이고, 여기에 웹 애플리케이션 방화벽(WAF), DDoS 보호등 다양한 보안 기능까지 통합된 제품이다.
+전 세계 타겟으로 하는 서비스라면 이 제품이 유용하지만. 국내만 하는 등 단일 지역만 대상으로 하는 서비스에는 Load Balancer 또는 Traffic Manager 가 더 적합하다. [이 문서](https://docs.microsoft.com/ko-kr/azure/architecture/guide/technology-choices/load-balancing-overview)를 참고하면, Front Doot 등 다양한 부하분산 옵션 중 적합한 것으로 선택하는 데 도움이 된다.
 
 리소스 생성을 시작하면 Front Door 디자이너가 나온다. 프런트엔드/도메인 부터 백엔드 풀, 회람 규칙 까지 순서대로 설정하면 된다.
 ![](/files/blog/2020-11-03/azurefddesign.png)
@@ -1081,3 +1082,18 @@ Front Door에 설정할 WAF 정책을 생성하여 설정해 보자. Front Door 
 
 WAF 정책 생성 중 볼 수 있는 관리형 규칙 선택 화면이다. OWASP Top 10 에 정의된 웹 취약점에 대한 공격을 방어하는 방화벽 정책이 미리 준비되어 있어, 이를 그대로 사용할 수 있다.
 ![](/files/blog/2020-11-03/azfdwafrules.png)
+
+형식 연결 단계에서 앞서 생성한 Front Door 리소스와 연결 설정을 해 준다.
+![](/files/blog/2020-11-03/azfdwaffront.png)
+
+# 결론
+자. 지금까지 알아본 것을 그림 하나와 몇 줄의 설명으로 요약해 보자.
+![](/files/blog/2020-11-03/azarch.png)
+
+중간에 계약이 틀어져서 실제로 프로덕션에 올리진 못했지만, 위 그림과 같은 구조의 백엔드 개발과 인프라 설계를 검토했다고 볼 수 있다.
+- ASP.NET Core, Swagger, .Net Identity, EF Core, FluentEmail 등을 활용하고 코드 자동 생성을 통해 빠르게 앱 백엔드 개발
+- App Service, Azure Database for MySQL 을 이용한 기본적인 백엔드 배포
+- SendGrid 를 활용한 사용자 인증메일 발송
+- Azure DevOps 를 이용한 소스코드 형상관리(Azure Repos)와 빌드 및 배포 자동화(Azure Pipelines)
+- API Management 를 이용한 여러 API 백엔드 통합
+- Front Door, WAF 연동을 통한 전세계 다양한 지역 사용자 빠른 서비스 제공과 웹 앱에 대한 공격 보호
