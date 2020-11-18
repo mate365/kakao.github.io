@@ -5,3 +5,4 @@ _site
 .idea
 .ruby-version
 vendor
+Gemfile.lock
