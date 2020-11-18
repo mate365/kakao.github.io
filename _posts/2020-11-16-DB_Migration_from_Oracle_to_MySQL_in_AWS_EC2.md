@@ -1,13 +1,15 @@
 ---
 layout: post
-title: "AWS DMS를 활용하여 Oracle에서 MySQL로 DB 옮기기"
+title: "AWS DMS를 활용하여 Oracle에서 MySQL로 DB 마이그레이션 하기"
 author: jungwoo kim
 date: 2020-11-16 17:00
 tags: [DB Migration, On-premise, Oracle, MySQL, Cloud, Amazon Web Services, AWS, EC2, DMS, SCT]
 ---
 
 ## 시작하기 전에
-현대차, 카카오, KT, 대한항공 등 에서 촉발된 `탈 Oracle` 프로젝트는 오픈소스 DB, 클라우드 DB 의 안정성이 높아지면서 국내 뿐만 아니라 해외에서 먼저 트렌드로 자리잡았으나, 그럼에도 불구하고 현존 RDBMS 중 최강인 ~~(가격도 최강)~~ Oracle 을 100% 대체할 수 있는 RDBMS는 안타깝게도 아직까지는 없다고 생각합니다. (2020년말기준)
+현대차, 카카오, KT, 대한항공 등 에서 촉발된 `탈(脫) Oracle` 프로젝트(`escape from oracle`)는 오픈소스 DB, 클라우드 DB 의 안정성이 높아지면서 국내 뿐만 아니라 해외에서 먼저 트렌드로 자리잡았으나, 그럼에도 불구하고 현존 RDBMS 중 성능 최강인 ~~(가격도 최강)~~ Oracle 을 100% 대체할 수 있는 RDBMS는 안타깝게도 아직까지는 없다고 생각합니다. (2020년말기준)
+
+그렇기 때문에 Oracle에서 벗어나려면 Oracle에서만 지원하는 기능을 어떻게 타겟DB에서 대체 또는 구현할지 에 대한 깊은 고민이 필요합니다.
 
 이번 C고객사에서는 시범적으로 기존 온프레미스 Oracle 의 레플리카를 퍼블릭 클라우드 환경으로 마이그레이션 하여 향후에 있을 감사 등 에 대응할 수 있길 원하셨습니다. 미션 크리티컬한 서비스 DB 가 아니여서 다운타임에 대한 고려가 불필요했습니다. 빗발치는 OLTP 가 발생하지 않는 DB의 마이그레이션이라... 꿀냄새가 진동하네요.
 
@@ -72,7 +74,9 @@ SELECT @@innodb_buffer_pool_size / 1024 / 1024 / 1024;
 ### 2. Timezone
 EC2 에 MySQL 바이너리 설치한 초기 상태에서는 timezone 을 소스와 동일한 timezone 으로 설정해주어야 합니다. 먼저 소스 DB의 timezone을 확인합니다.
 ```sql
-SELECT DBTIMEZONE, SESSIONTIMEZONE FROM DUAL;
+SELECT   DBTIMEZONE,
+   SESSIONTIMEZONE
+FROM  DUAL;
 ```
 
 >| DBTIMEZONE | SESSIONTIMEZONE |
@@ -82,7 +86,7 @@ SELECT DBTIMEZONE, SESSIONTIMEZONE FROM DUAL;
 <br>소스DB의 timezone 은 UTC + 09:00 인 Korea Standard Time(KST) 인 것을 확인 했습니다.
 
 ```sql
--- 타겟DB timezone 리스트 중에 'Seoul' 로 끝나는 timezone 이 존재하는지 확인
+-- 타겟DB timezone 중에 'Seoul'이 존재하는지 확인
 SELECT  B.NAME,A.TIME_ZONE_ID
 FROM    MYSQL.TIME_ZONE A
         INNER JOIN MYSQL.TIME_ZONE_NAME B ON A.TIME_ZONE_ID = B.TIME_ZONE_ID
@@ -242,7 +246,8 @@ ALTER TABLE <table_name> CONVERT TO CHARACTER SET EUCKR COLLATE EUCKR_BIN;
 
 먼저, 복제 인스턴스는 아래 사양으로 생성했습니다.
 
-- 클래스: dms.c4.4xlarge ~~*(처음에는 c4.large였다가 너무 느려서 속 터짐)*~~
+- 클래스: dms.c4.4xlarge  
+~~*(처음에는 c4.large였다가 너무 느려 속 터져서 업그레이드)*~~
 - vCPUs: 8
 - 메모리: 30GiB
 - 전용EBS 대역폭: 2,000Mbps
@@ -304,6 +309,14 @@ ALTER TABLE <table_name> CONVERT TO CHARACTER SET EUCKR COLLATE EUCKR_BIN;
 
 ---
 ## 작업을 마치며
-그동안 Youtube로만 접했던 AWS의 `DMS`, `SCT`를 직접 사용해보니 아주 약간의 버그성 동작과 모호한 UI 로 인해 작업 초반에는 생산성이 떨어졌던 것이 사실이나, 소스/타겟에서 지원하는 DB 시스템의 종류가 폭 넓고 다양하며 특히 데이터를 일괄로 퍼서 넘기는 속도 등 성능이 뛰어나다고 봅니다. ~~(육아와 DB이관은 캐시템 으로 해결하세요.)~~
+그동안 Youtube로만 접했던 AWS의 `DMS`, `SCT`를 직접 사용해보니 아주 약간의 버그성 동작과 모호한 UI 로 인해 작업 초반에는 생산성이 떨어졌던 것이 사실이나, 소스/타겟에서 지원하는 DB engine 종류가 매우 다양하며 특히 데이터를 일괄로 퍼서 넘기는 속도 등 성능이 뛰어나다고 봅니다. ~~(육아와 DB이관은 캐시템 으로 해결하세요.)~~
 
-`DMS`의 경우 AWS콘솔에서 누구나 쉽게 이해하고 사용할 수 있도록 구성되어 있다고 생각합니다. 그래서 앞으로의 DB 마이그레이션은 기성 DBA 들만의 작업은 아닐 수 있겠다는 생각이 들었네요. 이런 좋은 도구들이 출시되기 이전의 DB 마이그레이션은 철야는 물론이었고, 수동 스크립트와의 눈알 빠지는 싸움이었으니까요.
+향후에 실 서비스 상태의 DB를 마이그레이션 하게 되는 경우 추가로 고려해야 할 것들을 대략 정리해봤습니다.
+
+1. 다운타임 최소화
+1. 지속적인 변경 사항 복제 시 지연시간 최소화
+1. 실패 시 roll-back 방안
+
+전통적인 DB 마이그레이션 작업은 일부 DBA, 일부 DB개발자 들만의 야간 작업으로 많이 치부되어오곤 했었습니다. 마이그레이션 진행 시 철야는 물론이었고, 스크립트 수작업하는 경우도 부지기수 였고, 경험 많은 DBA가 없으면 심각한 예외상황에 직면했을 경우 롤백하는 경우도 많았었지요.
+
+AWS DMS의 경우 AWS콘솔에서 누구나 쉽게 이해하고 사용할 수 있도록 구성되어 있어서, 이제 앞으로의 DB 마이그레이션은 기성 DBA 들만의 작업이 아닐 수 있겠다는 생각이 들었네요.
